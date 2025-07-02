@@ -154,50 +154,50 @@ module aiSearchRoleAssignments 'modules/ai-search-role-assignments.bicep' = {
 }
 
 // The name of the project capability host to be created
-var projectCapHost string = 'caphostproj'
-param deploymentTimestamp string = utcNow('yyyyMMddHHmmss')
-var uniqueSuffix = substring(uniqueString('${resourceGroup().id}-${deploymentTimestamp}'), 0, 4)
+// var projectCapHost string = 'caphostproj'
+// param deploymentTimestamp string = utcNow('yyyyMMddHHmmss')
+// var uniqueSuffix = substring(uniqueString('${resourceGroup().id}-${deploymentTimestamp}'), 0, 4)
 
 // This module creates the capability host for the project and account
-module addProjectCapabilityHost 'modules/add-project-capability-host.bicep' = {
-  name: 'capabilityHost-configuration-${uniqueSuffix}-deployment'
-  params: {
-    accountName: aiAccount.outputs.accountName
-    projectName: aiProject.outputs.projectName
-    cosmosDBConnection: aiProject.outputs.cosmosDBConnection
-    azureStorageConnection: aiProject.outputs.azureStorageConnection
-    aiSearchConnection: aiProject.outputs.aiSearchConnection
-    projectCapHost: projectCapHost
-  }
-  dependsOn: [
-    dnsLink
-    cosmosAccountRoleAssignments
-    storageAccountRoleAssignment
-    aiSearchRoleAssignments
-  ]
-}
+// module addProjectCapabilityHost 'modules/add-project-capability-host.bicep' = {
+//   name: 'capabilityHost-configuration-${uniqueSuffix}-deployment'
+//   params: {
+//     accountName: aiAccount.outputs.accountName
+//     projectName: aiProject.outputs.projectName
+//     cosmosDBConnection: aiProject.outputs.cosmosDBConnection
+//     azureStorageConnection: aiProject.outputs.azureStorageConnection
+//     aiSearchConnection: aiProject.outputs.aiSearchConnection
+//     projectCapHost: projectCapHost
+//   }
+//   dependsOn: [
+//     dnsLink
+//     cosmosAccountRoleAssignments
+//     storageAccountRoleAssignment
+//     aiSearchRoleAssignments
+//   ]
+// }
 
-// The Storage Blob Data Owner role must be assigned after the caphost is created
-module storageContainersRoleAssignment 'modules/blob-storage-container-role-assignments.bicep' = {
-  params: {
-    aiProjectPrincipalId: aiProject.outputs.projectPrincipalId
-    storageName: existingAzureStorageAccountResourceName
-    workspaceId: formatProjectWorkspaceId.outputs.projectWorkspaceIdGuid
-  }
-  dependsOn: [
-    addProjectCapabilityHost
-  ]
-}
+// // The Storage Blob Data Owner role must be assigned after the caphost is created
+// module storageContainersRoleAssignment 'modules/blob-storage-container-role-assignments.bicep' = {
+//   params: {
+//     aiProjectPrincipalId: aiProject.outputs.projectPrincipalId
+//     storageName: existingAzureStorageAccountResourceName
+//     workspaceId: formatProjectWorkspaceId.outputs.projectWorkspaceIdGuid
+//   }
+//   dependsOn: [
+//     addProjectCapabilityHost
+//   ]
+// }
 
-// The Cosmos Built-In Data Contributor role must be assigned after the caphost is created
-module cosmosContainerRoleAssignments 'modules/cosmos-container-role-assignments.bicep' = {
-  params: {
-    cosmosAccountName: existingAzureCosmosDBAccountResourceName
-    projectWorkspaceId: formatProjectWorkspaceId.outputs.projectWorkspaceIdGuid
-    projectPrincipalId: aiProject.outputs.projectPrincipalId
-  }
-  dependsOn: [
-    addProjectCapabilityHost
-    storageContainersRoleAssignment
-  ]
-}
+// // The Cosmos Built-In Data Contributor role must be assigned after the caphost is created
+// module cosmosContainerRoleAssignments 'modules/cosmos-container-role-assignments.bicep' = {
+//   params: {
+//     cosmosAccountName: existingAzureCosmosDBAccountResourceName
+//     projectWorkspaceId: formatProjectWorkspaceId.outputs.projectWorkspaceIdGuid
+//     projectPrincipalId: aiProject.outputs.projectPrincipalId
+//   }
+//   dependsOn: [
+//     addProjectCapabilityHost
+//     storageContainersRoleAssignment
+//   ]
+// }
