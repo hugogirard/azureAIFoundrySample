@@ -67,7 +67,7 @@ variable "existing_aisearch_account_name" {
 variable "ai_foundry_resource_name" {
     description = "The name of the AI Foundry resource"
     type        = string
-    default     = "aihgfoundry47"
+    default     = "aihgfoundry37"
 }
 
 variable "subnet_id_agent" {

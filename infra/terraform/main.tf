@@ -15,6 +15,19 @@ resource "random_string" "unique" {
 ## Reference an existing dependent
 ## resources
 
+data "azurerm_virtual_network" "vnet_foundry" {
+  provider            = azurerm.workload_subscription
+  name                = "vnet-agent"
+  resource_group_name = var.resource_group_name_resources
+}
+
+data "azurerm_subnet" "subnet_agent" {
+  provider            = azurerm.workload_subscription
+  name                = "snet-agent2"
+  virtual_network_name = data.azurerm_virtual_network.vnet_foundry.name
+  resource_group_name = var.resource_group_name_resources
+}
+
 data "azurerm_storage_account" "storage_account" {
   provider = azurerm.workload_subscription
 
@@ -79,7 +92,7 @@ resource "azapi_resource" "ai_foundry" {
       networkInjections = [
         {
           scenario                   = "agent"
-          subnetArmId                = var.subnet_id_agent
+          subnetArmId                = data.azurerm_subnet.subnet_agent.id
           useMicrosoftManagedNetwork = false
         }
       ]
