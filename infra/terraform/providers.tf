@@ -3,13 +3,13 @@ provider "azapi" {
 }
 
 provider "azapi" {
-  alias = "workload_subscription"
+  alias           = "workload_subscription"
   subscription_id = var.subscription_id_resources
 }
 
 provider "azapi" {
-  alias = "infra_subscription"
-  subscription_id = var.subscription_id_infra
+  alias           = "infra_subscription"
+  subscription_id = var.subscription_id_private_dns_zones
 }
 
 provider "azurerm" {
@@ -19,7 +19,7 @@ provider "azurerm" {
 }
 
 provider "azurerm" {
-  alias = "workload_subscription"
+  alias           = "workload_subscription"
   subscription_id = var.subscription_id_resources
   features {}
   storage_use_azuread = true

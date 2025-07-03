@@ -17,16 +17,24 @@ resource "random_string" "unique" {
 
 data "azurerm_virtual_network" "vnet_foundry" {
   provider            = azurerm.workload_subscription
-  name                = "vnet-agent"
+  name                = var.existing_vnet_name
   resource_group_name = var.resource_group_name_resources
 }
 
 data "azurerm_subnet" "subnet_agent" {
-  provider            = azurerm.workload_subscription
-  name                = "snet-agent2"
+  provider             = azurerm.workload_subscription
+  name                 = var.existing_subnet_agent_name
   virtual_network_name = data.azurerm_virtual_network.vnet_foundry.name
-  resource_group_name = var.resource_group_name_resources
+  resource_group_name  = var.resource_group_name_resources
 }
+
+data "azurerm_subnet" "subnet_private_endpoint" {
+  provider             = azurerm.workload_subscription
+  name                 = var.existing_subnet_private_endpoint_name
+  virtual_network_name = data.azurerm_virtual_network.vnet_foundry.name
+  resource_group_name  = var.resource_group_name_resources
+}
+
 
 data "azurerm_storage_account" "storage_account" {
   provider = azurerm.workload_subscription
@@ -44,10 +52,10 @@ data "azurerm_cosmosdb_account" "cosmosdb" {
 
 data "azapi_resource" "ai_search" {
   provider = azapi.workload_subscription
-  
-  name                = var.existing_aisearch_account_name
-  parent_id           = "/subscriptions/${var.subscription_id_resources}/resourceGroups/${var.resource_group_name_resources}"
-  type                = "Microsoft.Search/searchServices@2024-06-01-preview"
+
+  name      = var.existing_aisearch_account_name
+  parent_id = "/subscriptions/${var.subscription_id_resources}/resourceGroups/${var.resource_group_name_resources}"
+  type      = "Microsoft.Search/searchServices@2024-06-01-preview"
 }
 
 ## Create the AI Foundry resource
@@ -79,7 +87,7 @@ resource "azapi_resource" "ai_foundry" {
       allowProjectManagement = true
 
       # Set custom subdomain name for DNS names created for this Foundry resource
-      customSubDomainName    = var.ai_foundry_resource_name
+      customSubDomainName = var.ai_foundry_resource_name
 
       # Network-related controls
       # Disable public access but allow Trusted Azure Services exception
@@ -105,14 +113,14 @@ resource "azapi_resource" "ai_foundry" {
 resource "azurerm_private_endpoint" "pe-aifoundry" {
   provider = azurerm.workload_subscription
 
-  depends_on = [    
+  depends_on = [
     azapi_resource.ai_foundry
   ]
 
   name                = "${azapi_resource.ai_foundry.name}-private-endpoint"
   location            = var.location
   resource_group_name = var.resource_group_name_resources
-  subnet_id           = var.subnet_id_pe
+  subnet_id           = data.azurerm_subnet.subnet_private_endpoint.id
 
   private_service_connection {
     name                           = "${azapi_resource.ai_foundry.name}-private-link-service-connection"
