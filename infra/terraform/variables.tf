@@ -49,25 +49,25 @@ variable "resource_group_name_resources" {
 variable "existing_storage_account_name" {
   description = "The name of the existing storage account to use for agent data"
   type        = string
-  default = "strhg22"
+  default = "strhgtest77"
 }
 
 variable "existing_cosmosdb_account_name" {
     description = "The name of the existing cosmosdb account to use for agent data"
     type = string
-    default = "cosmoshg77"
+    default = "cosmosdbhg77"
 }
 
 variable "existing_aisearch_account_name" {
     description = "The name of the existing ai search account to use for agent data"
     type = string
-    default = "aisearchhgdemo"
+    default = "aisearchhg"
 }
 
 variable "ai_foundry_resource_name" {
     description = "The name of the AI Foundry resource"
     type        = string
-    default     = "aihgfoundry89"
+    default     = "aihgfoundry47"
 }
 
 variable "subnet_id_agent" {
@@ -85,7 +85,7 @@ variable  "subnet_id_pe" {
 variable "project_name" {
     description = "The name of the project"
     type        = string
-    default     = "contoso"
+    default     = "cont"
 }
 
 
