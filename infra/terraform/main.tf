@@ -151,14 +151,11 @@ resource "azapi_resource" "ai_foundry_project" {
 
   depends_on = [
     azapi_resource.ai_foundry,
-    # azurerm_private_endpoint.pe-storage,
-    # azurerm_private_endpoint.pe-cosmosdb,
-    # azurerm_private_endpoint.pe-aisearch,
     azurerm_private_endpoint.pe-aifoundry
   ]
 
   type                      = "Microsoft.CognitiveServices/accounts/projects@2025-04-01-preview"
-  name                      = "project${random_string.unique.result}"
+  name                      = var.project_name
   parent_id                 = azapi_resource.ai_foundry.id
   location                  = var.location
   schema_validation_enabled = false
@@ -172,8 +169,8 @@ resource "azapi_resource" "ai_foundry_project" {
     }
 
     properties = {
-      displayName = "project"
-      description = "A project for the AI Foundry account with network secured deployed Agent"
+      displayName = var.project_display_name
+      description = var.project_description
     }
   }
 
@@ -362,7 +359,7 @@ resource "azapi_resource" "ai_foundry_project_capability_host" {
     time_sleep.wait_rbac
   ]
   type                      = "Microsoft.CognitiveServices/accounts/projects/capabilityHosts@2025-04-01-preview"
-  name                      = "caphostproj"
+  name                      = "cap${var.project_name}"
   parent_id                 = azapi_resource.ai_foundry_project.id
   schema_validation_enabled = false
 
