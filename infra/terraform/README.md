@@ -257,3 +257,19 @@ For issues and questions:
 2. Verify Azure resource configurations
 3. Ensure all prerequisites are met
 4. Review network connectivity and DNS settings
+
+## Important Considerations
+
+Before deploying this infrastructure, please take note of these critical points:
+
+### Subnet Requirements
+- **Agent Subnet Size**: The subnet designated for agents (`existing_subnet_agent_name`) must be at least `/24` in size to accommodate the AI Foundry resources and ensure proper network functionality.
+
+### Azure AI Foundry Deletion
+- **Purge Before Redeployment**: If you delete an Azure AI Foundry resource, it enters a soft-delete state. You must purge it completely before running the Terraform script again to avoid naming conflicts and deployment failures.
+
+### Project Creation Limitations
+- **UI Restrictions**: Projects created through the Azure portal UI cannot leverage your own existing resources (Storage Account, CosmosDB, AI Search) without additional configuration.
+- **Terraform Only**: For now, using your own existing resources with AI Foundry projects is only possible through Terraform deployment, not through the Azure portal UI.
+- **Capacity Host Requirement**: To use your own resources with AI Foundry projects, you need the Capability Host resource, which this Terraform configuration provides.
+- **Resource Connections**: The Terraform deployment creates the necessary connections between your project and existing resources, enabling full functionality that may not be available through the UI alone.
