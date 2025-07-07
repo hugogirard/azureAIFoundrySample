@@ -40,3 +40,69 @@ jobs:
           name: RESOURCE_GROUP_NAME
           value: ${{ steps.createResources.outputs.resourceGroupName }}
           pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: LOCATION
+          value: ${{ steps.createResources.outputs.location }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: VNET_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.vnetResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: SUBNET_AGENT_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.subnetAgentResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: SUBNET_PRIVATE_ENDPOINT_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.subnetPrivateEndpointResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: AI_SERVICES_PRIVATE_DNS_ZONE_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.aiServicesPrivateDnsZoneResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: COGNITIVE_SERVICES_PRIVATE_DNS_ZONE_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.cognitiveServicesPrivateDnsZoneResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: OPEN_AI_PRIVATE_DNS_ZONE_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.openAiPrivateDnsZoneResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: PRIVATE_DNS_RESOURCE_GROUP_NAME
+          value: ${{ steps.createResources.outputs.privateDnsResourceGroupName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: AI_SEARCH_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.aiSearchResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: AZURE_COSMOS_DB_ACCOUNT_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.azureCosmosDBAccountResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: STORAGE_ACCOUNT_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.storageAccountResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
