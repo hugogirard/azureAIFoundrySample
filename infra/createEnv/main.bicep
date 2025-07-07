@@ -79,17 +79,17 @@ module privateDnsZone 'br/public:avm/res/network/private-dns-zone:0.7.1' = [
           virtualNetworkResourceId: virtualNetwork.outputs.resourceId
         }
       ]
-      a: [
-        {
-          aRecords: [
-            {
-              ipv4Address: jumpbox.outputs.nicConfigurations[0].ipConfigurations[0].privateIP
-            }
-          ]
-          name: jumpbox.outputs.name
-          ttl: 10
-        }
-      ]
+      // a: [
+      //   {
+      //     aRecords: [
+      //       {
+      //         ipv4Address: jumpbox.outputs.nicConfigurations[0].ipConfigurations[0].privateIP
+      //       }
+      //     ]
+      //     name: jumpbox.outputs.name
+      //     ttl: 10
+      //   }
+      // ]
     }
   }
 ]
@@ -134,7 +134,7 @@ module storageAccount 'br/public:avm/res/storage/storage-account:0.25.0' = {
         privateDnsZoneGroup: {
           privateDnsZoneGroupConfigs: [
             {
-              privateDnsZoneResourceId: privateDnsZone[5].outputs.resourceId
+              privateDnsZoneResourceId: privateDnsZone[0].outputs.resourceId
             }
           ]
         }
@@ -171,7 +171,7 @@ module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' =
         privateDnsZoneGroup: {
           privateDnsZoneGroupConfigs: [
             {
-              privateDnsZoneResourceId: privateDnsZone[5].outputs.resourceId
+              privateDnsZoneResourceId: privateDnsZone[2].outputs.resourceId
             }
           ]
         }
@@ -180,50 +180,63 @@ module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' =
   }
 }
 
-module jumpbox 'br/public:avm/res/compute/virtual-machine:0.15.1' = {
-  scope: rg
-  params: {
-    adminUsername: adminUserName
-    imageReference: {
-      offer: 'WindowsServer'
-      publisher: 'MicrosoftWindowsServer'
-      sku: '2022-datacenter-azure-edition'
-      version: 'latest'
-    }
-    name: 'jumpbox'
-    nicConfigurations: [
-      {
-        ipConfigurations: [
-          {
-            name: 'ipconfig01'
-            pipConfiguration: {
-              publicIpNameSuffix: '-pip-01'
-              zones: []
-            }
-            subnetResourceId: virtualNetwork.outputs.subnetResourceIds[2]
-          }
-        ]
-        nicSuffix: '-nic-01'
-      }
-    ]
-    encryptionAtHost: false
-    osDisk: {
-      caching: 'ReadWrite'
-      diskSizeGB: 128
-      managedDisk: {
-        storageAccountType: 'Premium_LRS'
-      }
-    }
-    osType: 'Windows'
-    vmSize: 'Standard_D2s_v3'
-    zone: 0
-    adminPassword: adminPassword
-    location: location
-    autoShutdownConfig: {
-      dailyRecurrenceTime: '23:59'
-      notificationStatus: 'Disabled'
-      status: 'Enabled'
-      timeZone: 'UTC'
-    }
-  }
-}
+// module jumpbox 'br/public:avm/res/compute/virtual-machine:0.15.1' = {
+//   scope: rg
+//   params: {
+//     adminUsername: adminUserName
+//     imageReference: {
+//       offer: 'WindowsServer'
+//       publisher: 'MicrosoftWindowsServer'
+//       sku: '2022-datacenter-azure-edition'
+//       version: 'latest'
+//     }
+//     name: 'jumpbox'
+//     nicConfigurations: [
+//       {
+//         ipConfigurations: [
+//           {
+//             name: 'ipconfig01'
+//             pipConfiguration: {
+//               publicIpNameSuffix: '-pip-01'
+//               zones: []
+//             }
+//             subnetResourceId: virtualNetwork.outputs.subnetResourceIds[2]
+//           }
+//         ]
+//         nicSuffix: '-nic-01'
+//       }
+//     ]
+//     encryptionAtHost: false
+//     osDisk: {
+//       caching: 'ReadWrite'
+//       diskSizeGB: 128
+//       managedDisk: {
+//         storageAccountType: 'Premium_LRS'
+//       }
+//     }
+//     osType: 'Windows'
+//     vmSize: 'Standard_D2s_v3'
+//     zone: 0
+//     adminPassword: adminPassword
+//     location: location
+//     autoShutdownConfig: {
+//       dailyRecurrenceTime: '23:59'
+//       notificationStatus: 'Disabled'
+//       status: 'Enabled'
+//       timeZone: 'UTC'
+//     }
+//   }
+// }
+
+output resourceGroupName string = rg.name
+output location string = location
+output vnetResourceName string = virtualNetwork.outputs.name
+output subnetAgentResourceName string = virtualNetwork.outputs.subnetNames[0]
+output subnetPrivateEndpointResourceName string = virtualNetwork.outputs.subnetNames[1]
+output aiServicesPrivateDnsZoneResourceName string = privateDnsZone[4].outputs.name
+output cognitiveServicesPrivateDnsZoneResourceName string = privateDnsZone[1].outputs.name
+output openAiPrivateDnsZoneResourceName string = privateDnsZone[3].outputs.name
+output privateDnsResourceGroupName string = rg.name
+output aiSearchResourceName string = searchService.outputs.name
+output azureCosmosDBAccountResourceName string = databaseAccount.outputs.name
+output storageAccountResourceName string = storageAccount.outputs.name

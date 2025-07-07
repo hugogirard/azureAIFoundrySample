@@ -13,7 +13,7 @@ variable "subscription_id_private_dns_zones" {
 variable "resource_group_name_dns" {
   description = "The resource group where all the Private DNS Zones resources are located"
   type        = string
-  default     = "rg-fresh-agent"
+  default     = "rg-agent-byon"
 }
 
 variable "private_dns_cognitiveservices_name" {
@@ -61,43 +61,43 @@ variable "existing_subnet_private_endpoint_name" {
 variable "resource_group_name_resources" {
   description = "The name of the existing resource group to deploy the resources into"
   type        = string
-  default     = "rg-fresh-agent"
+  default     = "rg-agent-byon"
 }
 
 variable "existing_storage_account_name" {
   description = "The name of the existing storage account to use for agent data"
   type        = string
-  default     = "strlpbq74kwlx7m2"
+  default     = "str6xayabvw4i43k"
 }
 
 variable "existing_cosmosdb_account_name" {
   description = "The name of the existing cosmosdb account to use for agent data"
   type        = string
-  default     = "cosmos-lpbq74kwlx7m2"
+  default     = "cosmos-6xayabvw4i43k"
 }
 
 variable "existing_aisearch_account_name" {
   description = "The name of the existing ai search account to use for agent data"
   type        = string
-  default     = "search-lpbq74kwlx7m2"
+  default     = "search-6xayabvw4i43k"
 }
 
 variable "ai_foundry_resource_name" {
   description = "The name of the AI Foundry resource"
   type        = string
-  default     = "hugifoundry"
+  default     = "foundry-6xayabvw4i43k"
 }
 
 variable "project_name" {
   description = "The name of the project"
   type        = string
-  default     = "acasol"
+  default     = "acasolhotel"
 }
 
 variable "project_display_name" {
   description = "The display name of the project"
   type        = string
-  default     = "acasol"
+  default     = "acasolhotel"
 }
 
 variable "project_description" {
