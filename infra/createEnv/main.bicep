@@ -221,7 +221,6 @@ module jumpbox 'br/public:avm/res/compute/virtual-machine:0.15.1' = {
     location: location
     autoShutdownConfig: {
       dailyRecurrenceTime: '23:59'
-      notificationStatus: 'Disabled'
       status: 'Enabled'
       timeZone: 'UTC'
     }
