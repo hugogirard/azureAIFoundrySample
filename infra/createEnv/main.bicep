@@ -233,7 +233,7 @@ module jumpboxARecord 'create_dns_record.bicep' = [
     scope: rg
     params: {
       recordName: jumpbox.outputs.name
-      #disable-next-line use-safe-access
+      #disable-next-line all
       ipv4Address: jumpbox.outputs.nicConfigurations[0].ipConfigurations[0].privateIP
       privateDnsZoneName: name
     }
