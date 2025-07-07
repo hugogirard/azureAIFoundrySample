@@ -32,45 +32,11 @@ jobs:
           region: ${{ env.REGION }}
           deploymentName: ${{ github.run_id }}
           template: ./infra/createEnv/main.bicep
+          failOnStdErr: false
           parameters: ./infra/createEnv/main.bicepparam adminPassword=${{ secrets.VM_PASSWORD }} adminUserName=${{ secrets.VM_ADMIN }}
 
-      # - name: Set role to AdminUser
-      #   run: |
-      #     ROLE_ID=$(az cosmosdb sql role definition list \
-      #              --resource-group ${{ steps.createResources.outputs.resourceGroupName }} \
-      #              --account-name ${{ steps.createResources.outputs.cosmosDbResourceName }} | jq -r '.[] | select(.roleName=="Cosmos DB Built-in Data Contributor") | .id')
-      #     az cosmosdb sql role assignment create --resource-group ${{ steps.createResources.outputs.resourceGroupName }} \
-      #                                            --account-name  ${{ steps.createResources.outputs.cosmosDbResourceName }} \
-      #                                            --role-definition-id $ROLE_ID \
-      #                                            --principal-id ${{ secrets.ADMIN_USER_ID }}
-      #                                            --scope ${{ steps.createResources.outputs.cosmosDbResourceId }}
-
-    #   - uses: gliech/create-github-secret-action@v1
-    #     with:
-    #       name: STORATE_RESOURCE_NAME
-    #       value: ${{ steps.createResources.outputs.storageResourceName }}
-    #       pa_token: ${{ secrets.PA_TOKEN }}
-
-    #   - uses: gliech/create-github-secret-action@v1
-    #     with:
-    #       name: OPENAI_RESOURCE_NAME
-    #       value: ${{ steps.createResources.outputs.openAiResourceName }}
-    #       pa_token: ${{ secrets.PA_TOKEN }}
-
-    #   - uses: gliech/create-github-secret-action@v1
-    #     with:
-    #       name: SEARCHAI_RESOURCE_NAME
-    #       value: ${{ steps.createResources.outputs.searchAiResourceName }}
-    #       pa_token: ${{ secrets.PA_TOKEN }}
-
-    #   - uses: gliech/create-github-secret-action@v1
-    #     with:
-    #       name: RESOURCE_GROUP_NAME
-    #       value: ${{ steps.createResources.outputs.resourceGroupName }}
-    #       pa_token: ${{ secrets.PA_TOKEN }}
-
-    #   - uses: gliech/create-github-secret-action@v1
-    #     with:
-    #       name: PROJECT_RESOURCEID
-    #       value: ${{ steps.createResources.outputs.projectResourceId }}
-    #       pa_token: ${{ secrets.PA_TOKEN }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: RESOURCE_GROUP_NAME
+          value: ${{ steps.createResources.outputs.resourceGroupName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
