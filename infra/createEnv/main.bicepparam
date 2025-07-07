@@ -12,6 +12,6 @@ param subnetPrivateEndpointAddressPrefix = '192.168.2.0/27'
 
 param vnetAddressPrefix = '192.168.0.0/16'
 
-param adminPassword = 'blackberry01&'
+param adminPassword = ''
 
-param adminUserName = 'pladmin'
+param adminUserName = ''
