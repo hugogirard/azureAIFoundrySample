@@ -1,26 +1,28 @@
 using 'main.bicep'
 
-param aiServices = 'aifoundryhg76'
+param aiServices = ''
 
-param existingVnetName = 'vnet-agent'
+param existingVnetName = ''
 
-param existingVnetResourceGroupName = 'rg-agent-existing'
+param existingVnetResourceGroupName = ''
 
-param location = 'eastus2'
+param location = ''
 
-param existingAgentSubnetName = 'snet-agent'
+param existingAgentSubnetName = ''
 
-param existingPeSubnetName = 'snet-pe'
+param existingPeSubnetName = ''
 
-param aiServicesPrivateDnsZoneResourceName = 'privatelink.services.ai.azure.com'
+param aiServicesPrivateDnsZoneResourceName = ''
 
-param cognitiveServicesPrivateDnsZoneResourceName = 'privatelink.cognitiveservices.azure.com'
+param cognitiveServicesPrivateDnsZoneResourceName = ''
 
 param openAiPrivateDnsZoneResourceName = 'privatelink.openai.azure.com'
 
 param privateDnsResourceGroupName = 'rg-private-dns-zone'
 
 param privateDnsSubscriptionId = 'daf89b62-86a4-4655-a729-38f72e5069a6'
+
+param deployProject = true
 
 param projectName = 'project'
 

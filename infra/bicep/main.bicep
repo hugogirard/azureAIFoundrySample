@@ -4,6 +4,9 @@ param location string
 @description('Name for your AI Services resource.')
 param aiServices string
 
+@description('Deploy a project with the AI Foundry')
+param deployProject bool
+
 @description('Name for your project resource.')
 param projectName string
 
