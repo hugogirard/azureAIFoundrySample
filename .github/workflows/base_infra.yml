@@ -9,7 +9,7 @@ jobs:
       REGION: "eastus2" # You can change this to reflect the region where you deploy your Accelerator
       AZURE_CORE_OUTPUT: "none"
 
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
