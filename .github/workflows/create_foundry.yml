@@ -25,10 +25,17 @@ jobs:
 
       - uses: cschleiden/replace-tokens@v1
         with:
+            tokenPrefix: '__'
+            tokenSuffix: '__'            
             files: '["infra/bicep/main.bicepparam"]'
         env:
             existingVnetName: ${{ secrets.VNET_RESOURCE_NAME }}            
 
+      - uses: actions/upload-artifact@v4.6.2
+        name: 'upload param files'
+        with:
+          path: infra/bicep/main.bicepparam
+          
     #   - name: deploy
     #     id: createResources
     #     uses: azure/arm-deploy@v2
