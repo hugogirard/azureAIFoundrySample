@@ -54,7 +54,7 @@ module aiSearchRoleAssignments 'modules/ai-search-role-assignments.bicep' = {
 }
 
 // The name of the project capability host to be created
-var projectCapHost string = 'cap-${projectName}'
+var projectCapHost string = 'cap${projectName}'
 param deploymentTimestamp string = utcNow('yyyyMMddHHmmss')
 var uniqueSuffix = substring(uniqueString('${resourceGroup().id}-${deploymentTimestamp}'), 0, 4)
 
