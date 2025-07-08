@@ -83,9 +83,7 @@ jobs:
         id: createResources
         uses: azure/arm-deploy@v2
         with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          scope: subscription
-          region: ${{ env.REGION }}
+          resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
           deploymentName: ${{ github.run_id }}
           template: ./infra/bicep/main.bicep
           failOnStdErr: false
