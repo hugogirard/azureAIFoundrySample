@@ -1,9 +1,6 @@
 @description('Location for all resources.')
 param location string
 
-@description('Name for your AI Services resource.')
-param aiServices string
-
 @description('Deploy a project with the AI Foundry')
 param deployProject bool
 
@@ -55,7 +52,7 @@ param privateDnsSubscriptionId string
 @description('The resource group name of the private DNS Zones')
 param privateDnsResourceGroupName string
 
-var accountName = toLower('${aiServices}')
+var accountName = 'aisrv-${uniqueString(resourceGroup().id)}'
 
 /*
   Get the existing vnet reference

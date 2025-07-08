@@ -1,7 +1,5 @@
 using 'main.bicep'
 
-param aiServices = '__aiServices__'
-
 param existingVnetName = '__existingVnetName__'
 
 param existingVnetResourceGroupName = '__existingVnetResourceGroupName__'
