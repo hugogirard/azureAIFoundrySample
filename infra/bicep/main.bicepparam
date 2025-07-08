@@ -1,37 +1,39 @@
 using 'main.bicep'
 
-param aiServices = ''
+param aiServices = '__aiServices__'
 
-param existingVnetName = ''
+param existingVnetName = '__existingVnetName__'
 
-param existingVnetResourceGroupName = ''
+param existingVnetResourceGroupName = '__existingVnetResourceGroupName__'
 
-param location = ''
+param location = '__location__'
 
-param existingAgentSubnetName = ''
+param existingAgentSubnetName = '__existingAgentSubnetName__'
 
-param existingPeSubnetName = ''
+param existingPeSubnetName = '__existingPeSubnetName__'
 
-param aiServicesPrivateDnsZoneResourceName = ''
+param aiServicesPrivateDnsZoneResourceName = '__aiServicesPrivateDnsZoneResourceName__'
 
-param cognitiveServicesPrivateDnsZoneResourceName = ''
+param cognitiveServicesPrivateDnsZoneResourceName = '__cognitiveServicesPrivateDnsZoneResourceName__'
 
-param openAiPrivateDnsZoneResourceName = 'privatelink.openai.azure.com'
+param openAiPrivateDnsZoneResourceName = '__openAiPrivateDnsZoneResourceName__'
 
-param privateDnsResourceGroupName = 'rg-private-dns-zone'
+param privateDnsResourceGroupName = '__privateDnsResourceGroupName__'
 
-param privateDnsSubscriptionId = 'daf89b62-86a4-4655-a729-38f72e5069a6'
+param privateDnsSubscriptionId = '__privateDnsSubscriptionId__'
 
 param deployProject = true
 
-param projectName = 'project'
+param projectName = '__projectName__'
 
-param projectDescription = 'A project for the AI Foundry account with network secured deployed Agent'
+param projectDescription = '__projectDescription__'
 
-param projectDisplayName = 'network secured agent project'
+param projectDisplayName = '__projectDisplayName__'
 
-param existingAiSearchResourceName = 'aisearchhgdemo'
+param existingAiSearchResourceName = '__existingAiSearchResourceName__'
 
-param existingAzureCosmosDBAccountResourceName = 'cosmoshg77'
+param existingAzureCosmosDBAccountResourceName = '__existingAzureCosmosDBAccountResourceName__'
 
-param existingAzureStorageAccountResourceName = 'strhg22'
+param existingAzureStorageAccountResourceName = '__existingAzureStorageAccountResourceName__'
+
+param privateFoundry = true

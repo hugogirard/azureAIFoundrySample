@@ -2,6 +2,7 @@ param accountName string
 param location string
 param agentSubnetId string
 param privateEndpointSubnetId string
+param privateFoundry bool
 
 var networkInjection = 'true'
 
@@ -24,7 +25,7 @@ resource account 'Microsoft.CognitiveServices/accounts@2025-04-01-preview' = {
       virtualNetworkRules: []
       ipRules: []
     }
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: privateFoundry ? 'Disabled' : 'Enabled'
     networkInjections: ((networkInjection == 'true')
       ? [
           {
@@ -42,7 +43,7 @@ resource account 'Microsoft.CognitiveServices/accounts@2025-04-01-preview' = {
 /*
    Creating the private endpoint for the Azure AI Foundry
 */
-resource aiAccountPrivateEndpoint 'Microsoft.Network/privateEndpoints@2024-05-01' = {
+resource aiAccountPrivateEndpoint 'Microsoft.Network/privateEndpoints@2024-05-01' = if (privateFoundry) {
   name: '${account.name}-private-endpoint'
   location: resourceGroup().location
   properties: {
