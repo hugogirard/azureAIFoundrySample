@@ -1,4 +1,4 @@
-name: Create Core resources
+name: Create Azure AI Foundry Resources
 
 on:
   workflow_dispatch:
