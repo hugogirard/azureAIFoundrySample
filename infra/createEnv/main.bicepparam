@@ -2,7 +2,7 @@ using 'main.bicep'
 
 param location = 'eastus2'
 
-param resourceGroupName = 'rg-azure-agent-demo'
+param resourceGroupName = 'rg-azure-agent-demo-tf'
 
 param subnetAgentAddressPrefix = '192.168.1.0/24'
 
