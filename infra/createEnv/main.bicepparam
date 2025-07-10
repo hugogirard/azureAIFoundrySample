@@ -4,7 +4,7 @@ param location = 'eastus2'
 
 param resourceGroupNameVNET = 'rg-vnet-agent'
 
-param resourceGroupName = 'rg-azure-agent-demo-ac2'
+param resourceGroupName = 'rg-azure-agent-demo'
 
 param resourceGroupTFState = 'rg-tf-state'
 
