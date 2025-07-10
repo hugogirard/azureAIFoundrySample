@@ -56,10 +56,10 @@ jobs:
             subscriptionID: ${{ secrets.AZURE_SUBSCRIPTION }}
 
 
-      # - name: Azure Login
-      #   uses: Azure/login@v2
-      #   with:
-      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Azure Login
+        uses: Azure/login@v2
+        with:
+          creds: ${{ secrets.SP_FOUNDRY }}
 
 #       # Temp fix
 #       - name: bicep tmp fix
