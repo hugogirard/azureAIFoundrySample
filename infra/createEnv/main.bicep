@@ -144,6 +144,14 @@ module tfState 'br/public:avm/res/storage/storage-account:0.25.0' = {
     skuName: 'Standard_LRS'
     allowSharedKeyAccess: false
     publicNetworkAccess: 'Enabled'
+    blobServices: {
+      containers: [
+        {
+          name: 'tfstate'
+          publicAccess: 'None'
+        }
+      ]
+    }
     tags: {
       role: 'terraformstate'
     }
@@ -273,6 +281,7 @@ module jumpboxARecord 'create_dns_record.bicep' = [
 output resourceGroupName string = rgResources.name
 output location string = location
 output vnetResourceName string = virtualNetwork.outputs.name
+output vnetResourceGroupName string = rgVNET.name
 output subnetAgentResourceName string = virtualNetwork.outputs.subnetNames[0]
 output subnetPrivateEndpointResourceName string = virtualNetwork.outputs.subnetNames[1]
 output aiServicesPrivateDnsZoneResourceName string = privateDnsZone[4].outputs.name

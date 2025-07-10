@@ -12,6 +12,13 @@ terraform {
     }
   }
   required_version = ">= 1.8.3"
-  # Uncomment to store state in Azure Storage
-  # backend "azurerm" {}
+  # Comment when running locally to not store state in Azure Storage
+  backend "azurerm" {
+    resource_group_name  = "__resourceGroupName__"
+    storage_account_name = "__storageAccountName__"
+    container_name       = "tfstate"
+    key                  = "foundry.tfstate"
+    tenant_id            = "__tenantID__"
+    subscription_id      = "__subscriptionID__"
+  }
 }

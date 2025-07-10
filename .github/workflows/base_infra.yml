@@ -55,6 +55,12 @@ jobs:
 
       - uses: gliech/create-github-secret-action@v1
         with:
+          name: VNET_RESOURCE_GROUP_NAME
+          value: ${{ steps.createResources.outputs.vnetResourceGroupName }}
+          pa_token: ${{ secrets.PA_TOKEN }}          
+    
+      - uses: gliech/create-github-secret-action@v1
+        with:
           name: SUBNET_AGENT_RESOURCE_NAME
           value: ${{ steps.createResources.outputs.subnetAgentResourceName }}
           pa_token: ${{ secrets.PA_TOKEN }}
@@ -124,3 +130,5 @@ jobs:
           name: TERRAFORM_STORAGE_RESOURCE_GROUP
           value: ${{ steps.createResources.outputs.terraformStorageResourceGroup }}
           pa_token: ${{ secrets.PA_TOKEN }}
+
+
