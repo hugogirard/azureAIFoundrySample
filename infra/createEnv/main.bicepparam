@@ -4,7 +4,9 @@ param location = 'eastus2'
 
 param resourceGroupNameVNET = 'rg-vnet-agent'
 
-param resourceGroupName = 'rg-azure-agent-demo-ac'
+param resourceGroupName = 'rg-azure-agent-demo-ac2'
+
+param resourceGroupTFState = 'rg-tf-state'
 
 param subnetAgentAddressPrefix = '192.168.1.0/24'
 

@@ -106,3 +106,21 @@ jobs:
           name: STORAGE_ACCOUNT_RESOURCE_NAME
           value: ${{ steps.createResources.outputs.storageAccountResourceName }}
           pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: TF_STORAGE_ENDPOINT
+          value: ${{ steps.createResources.outputs.terraformStateEndpoint }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: TERRAFORM_STORAGE_NAME
+          value: ${{ steps.createResources.outputs.terraformStorageName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+          
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: TERRAFORM_STORAGE_RESOURCE_GROUP
+          value: ${{ steps.createResources.outputs.terraformStorageResourceGroup }}
+          pa_token: ${{ secrets.PA_TOKEN }}

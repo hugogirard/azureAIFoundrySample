@@ -1,90 +1,90 @@
-name: Create Azure AI Foundry Resources
+# name: Create Azure AI Foundry Resources
 
-on:
-  workflow_dispatch:
-    inputs:
-      privateFoundry:
-        description: 'Deploy the AI Foundry in private mode'
-        required: true
-        type: boolean
-        default: false        
-      deployProject:
-        description: 'If a default project needs to be deployed with the AI Foundry'
-        required: true
-        type: boolean
-        default: true
-      projectName:
-        description: 'The name of the project'
-        required: true
-        type: string
-        default: 'contoso'   
-      projectDescription: 
-        description: 'The description of the project'
-        required: true
-        type: string
-        default: 'Contoso default project'          
-      projectDisplayName: 
-        description: 'The display name of the project'
-        required: true
-        type: string
-        default: 'Contoso'             
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       privateFoundry:
+#         description: 'Deploy the AI Foundry in private mode'
+#         required: true
+#         type: boolean
+#         default: false        
+#       deployProject:
+#         description: 'If a default project needs to be deployed with the AI Foundry'
+#         required: true
+#         type: boolean
+#         default: true
+#       projectName:
+#         description: 'The name of the project'
+#         required: true
+#         type: string
+#         default: 'contoso'   
+#       projectDescription: 
+#         description: 'The description of the project'
+#         required: true
+#         type: string
+#         default: 'Contoso default project'          
+#       projectDisplayName: 
+#         description: 'The display name of the project'
+#         required: true
+#         type: string
+#         default: 'Contoso'             
 
-jobs:
-  create-azure-ai-foundry:
-    env:
-      REGION: ${{ secrets.LOCATION }} # You can change this to reflect the region where you deploy your Accelerator
-      AZURE_CORE_OUTPUT: "none"
+# jobs:
+#   create-azure-ai-foundry:
+#     env:
+#       REGION: ${{ secrets.LOCATION }} # You can change this to reflect the region where you deploy your Accelerator
+#       AZURE_CORE_OUTPUT: "none"
 
-    runs-on: ubuntu-latest
+#     runs-on: ubuntu-latest
     
-    steps:
-      - uses: actions/checkout@v4
+#     steps:
+#       - uses: actions/checkout@v4
 
-      - name: Azure Login
-        uses: Azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+#       - name: Azure Login
+#         uses: Azure/login@v2
+#         with:
+#           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Temp fix
-      - name: bicep tmp fix
-        run: az config set bicep.use_binary_from_path=false
+#       # Temp fix
+#       - name: bicep tmp fix
+#         run: az config set bicep.use_binary_from_path=false
 
-      - uses: cschleiden/replace-tokens@v1
-        with:
-            tokenPrefix: '__'
-            tokenSuffix: '__'            
-            files: '["infra/bicep/main.bicepparam"]'
-        env:
-            existingVnetName: ${{ secrets.VNET_RESOURCE_NAME }}            
-            existingVnetResourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
-            location: ${{ secrets.LOCATION }}
-            existingAgentSubnetName: ${{ secrets.SUBNET_AGENT_RESOURCE_NAME }}
-            existingPeSubnetName: ${{ secrets.SUBNET_PRIVATE_ENDPOINT_RESOURCE_NAME }}
-            aiServicesPrivateDnsZoneResourceName: ${{ secrets.AI_SERVICES_PRIVATE_DNS_ZONE_RESOURCE_NAME }}
-            cognitiveServicesPrivateDnsZoneResourceName: ${{ secrets.COGNITIVE_SERVICES_PRIVATE_DNS_ZONE_RESOURCE_NAME }}
-            openAiPrivateDnsZoneResourceName: ${{ secrets.OPEN_AI_PRIVATE_DNS_ZONE_RESOURCE_NAME }}
-            privateDnsResourceGroupName: ${{ secrets.PRIVATE_DNS_RESOURCE_GROUP_NAME }}
-            privateDnsSubscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-            deployProject: ${{ inputs.deployProject }}
-            projectName: ${{ inputs.projectName }}
-            projectDescription: ${{ inputs.projectDescription }}
-            projectDisplayName: ${{ inputs.projectDisplayName }}
-            existingAiSearchResourceName: ${{ secrets.AI_SEARCH_RESOURCE_NAME }}
-            existingAzureCosmosDBAccountResourceName: ${{ secrets.AZURE_COSMOS_DB_ACCOUNT_RESOURCE_NAME }}
-            existingAzureStorageAccountResourceName: ${{ secrets.STORAGE_ACCOUNT_RESOURCE_NAME }}
-            privateFoundry: ${{ inputs.privateFoundry }}
+#       - uses: cschleiden/replace-tokens@v1
+#         with:
+#             tokenPrefix: '__'
+#             tokenSuffix: '__'            
+#             files: '["infra/bicep/main.bicepparam"]'
+#         env:
+#             existingVnetName: ${{ secrets.VNET_RESOURCE_NAME }}            
+#             existingVnetResourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+#             location: ${{ secrets.LOCATION }}
+#             existingAgentSubnetName: ${{ secrets.SUBNET_AGENT_RESOURCE_NAME }}
+#             existingPeSubnetName: ${{ secrets.SUBNET_PRIVATE_ENDPOINT_RESOURCE_NAME }}
+#             aiServicesPrivateDnsZoneResourceName: ${{ secrets.AI_SERVICES_PRIVATE_DNS_ZONE_RESOURCE_NAME }}
+#             cognitiveServicesPrivateDnsZoneResourceName: ${{ secrets.COGNITIVE_SERVICES_PRIVATE_DNS_ZONE_RESOURCE_NAME }}
+#             openAiPrivateDnsZoneResourceName: ${{ secrets.OPEN_AI_PRIVATE_DNS_ZONE_RESOURCE_NAME }}
+#             privateDnsResourceGroupName: ${{ secrets.PRIVATE_DNS_RESOURCE_GROUP_NAME }}
+#             privateDnsSubscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+#             deployProject: ${{ inputs.deployProject }}
+#             projectName: ${{ inputs.projectName }}
+#             projectDescription: ${{ inputs.projectDescription }}
+#             projectDisplayName: ${{ inputs.projectDisplayName }}
+#             existingAiSearchResourceName: ${{ secrets.AI_SEARCH_RESOURCE_NAME }}
+#             existingAzureCosmosDBAccountResourceName: ${{ secrets.AZURE_COSMOS_DB_ACCOUNT_RESOURCE_NAME }}
+#             existingAzureStorageAccountResourceName: ${{ secrets.STORAGE_ACCOUNT_RESOURCE_NAME }}
+#             privateFoundry: ${{ inputs.privateFoundry }}
 
-    #   - uses: actions/upload-artifact@v4.6.2
-    #     name: 'upload param files'
-    #     with:
-    #       path: infra/bicep/main.bicepparam
+#     #   - uses: actions/upload-artifact@v4.6.2
+#     #     name: 'upload param files'
+#     #     with:
+#     #       path: infra/bicep/main.bicepparam
 
-      - name: deploy
-        id: createResources
-        uses: azure/arm-deploy@v2
-        with:
-          resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
-          deploymentName: ${{ github.run_id }}
-          template: ./infra/bicep/main.bicep
-          failOnStdErr: false
-          parameters: ./infra/bicep/main.bicepparam
+#       - name: deploy
+#         id: createResources
+#         uses: azure/arm-deploy@v2
+#         with:
+#           resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+#           deploymentName: ${{ github.run_id }}
+#           template: ./infra/bicep/main.bicep
+#           failOnStdErr: false
+#           parameters: ./infra/bicep/main.bicepparam
