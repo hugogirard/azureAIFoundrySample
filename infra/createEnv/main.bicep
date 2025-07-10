@@ -1,6 +1,9 @@
 targetScope = 'subscription'
 
+param resourceGroupNameVNET string
+
 param resourceGroupName string
+
 param vnetAddressPrefix string
 
 param subnetAgentAddressPrefix string
@@ -26,20 +29,25 @@ var dnsZones = [
   'privatelink.search.windows.net'
 ]
 
-resource rg 'Microsoft.Resources/resourceGroups@2025-04-01' = {
+resource rgVNET 'Microsoft.Resources/resourceGroups@2025-04-01' = {
+  name: resourceGroupNameVNET
+  location: location
+}
+
+resource rgResources 'Microsoft.Resources/resourceGroups@2025-04-01' = {
   name: resourceGroupName
   location: location
 }
 
 module nsg 'br/public:avm/res/network/network-security-group:0.5.1' = {
-  scope: rg
+  scope: rgResources
   params: {
     name: 'nsg-jumpbox'
   }
 }
 
 module virtualNetwork 'br/public:avm/res/network/virtual-network:0.7.0' = {
-  scope: rg
+  scope: rgVNET
   params: {
     // Required parameters
     addressPrefixes: [
@@ -69,7 +77,7 @@ module virtualNetwork 'br/public:avm/res/network/virtual-network:0.7.0' = {
 
 module privateDnsZone 'br/public:avm/res/network/private-dns-zone:0.7.1' = [
   for name in dnsZones: {
-    scope: rg
+    scope: rgVNET
     params: {
       // Required parameters
       name: name
@@ -94,10 +102,10 @@ module privateDnsZone 'br/public:avm/res/network/private-dns-zone:0.7.1' = [
   }
 ]
 
-var suffix = uniqueString(rg.id)
+var suffix = uniqueString(rgResources.id)
 
 module searchService 'br/public:avm/res/search/search-service:0.10.0' = {
-  scope: rg
+  scope: rgResources
   params: {
     name: 'search-${suffix}'
     location: location
@@ -121,7 +129,7 @@ module searchService 'br/public:avm/res/search/search-service:0.10.0' = {
 }
 
 module storageAccount 'br/public:avm/res/storage/storage-account:0.25.0' = {
-  scope: rg
+  scope: rgResources
   params: {
     name: 'str${replace(suffix,'-','')}'
     location: location
@@ -146,7 +154,7 @@ module storageAccount 'br/public:avm/res/storage/storage-account:0.25.0' = {
 }
 
 module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' = {
-  scope: rg
+  scope: rgResources
   params: {
     name: 'cosmos-${suffix}'
     location: location
@@ -181,7 +189,7 @@ module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' =
 }
 
 module jumpbox 'br/public:avm/res/compute/virtual-machine:0.15.1' = {
-  scope: rg
+  scope: rgResources
   params: {
     adminUsername: adminUserName
     imageReference: {
@@ -230,7 +238,7 @@ module jumpbox 'br/public:avm/res/compute/virtual-machine:0.15.1' = {
 // Add the A Record of the Jumpbox
 module jumpboxARecord 'create_dns_record.bicep' = [
   for name in dnsZones: {
-    scope: rg
+    scope: rgVNET
     params: {
       recordName: jumpbox.outputs.name
       #disable-next-line all
@@ -240,7 +248,7 @@ module jumpboxARecord 'create_dns_record.bicep' = [
   }
 ]
 
-output resourceGroupName string = rg.name
+output resourceGroupName string = rgResources.name
 output location string = location
 output vnetResourceName string = virtualNetwork.outputs.name
 output subnetAgentResourceName string = virtualNetwork.outputs.subnetNames[0]
@@ -248,7 +256,7 @@ output subnetPrivateEndpointResourceName string = virtualNetwork.outputs.subnetN
 output aiServicesPrivateDnsZoneResourceName string = privateDnsZone[4].outputs.name
 output cognitiveServicesPrivateDnsZoneResourceName string = privateDnsZone[1].outputs.name
 output openAiPrivateDnsZoneResourceName string = privateDnsZone[3].outputs.name
-output privateDnsResourceGroupName string = rg.name
+output privateDnsResourceGroupName string = rgResources.name
 output aiSearchResourceName string = searchService.outputs.name
 output azureCosmosDBAccountResourceName string = databaseAccount.outputs.name
 output storageAccountResourceName string = storageAccount.outputs.name
