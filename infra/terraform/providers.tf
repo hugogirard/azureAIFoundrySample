@@ -24,10 +24,3 @@ provider "azurerm" {
   features {}
   storage_use_azuread = true
 }
-
-# provider "azurerm" {
-#   alias = "infra_subscription"
-#   subscription_id = var.subscription_id_infra
-#   features {}
-#   storage_use_azuread = true
-# }

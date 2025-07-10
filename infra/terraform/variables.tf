@@ -3,11 +3,6 @@ variable "subscription_id_resources" {
   type        = string
 }
 
-variable "vnet_resource_group_name" {
-  description = "The resource group of the VNET"
-  type        = string
-}
-
 variable "subscription_id_private_dns_zones" {
   description = "The subscription id where the private DNS zones are hosted"
   type        = string
@@ -15,6 +10,11 @@ variable "subscription_id_private_dns_zones" {
 
 variable "resource_group_name_dns" {
   description = "The resource group where all the Private DNS Zones resources are located"
+  type        = string
+}
+
+variable "vnet_resource_group_name" {
+  description = "The resource group where all the vnet is located"
   type        = string
 }
 
