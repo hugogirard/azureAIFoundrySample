@@ -142,7 +142,7 @@ module tfState 'br/public:avm/res/storage/storage-account:0.25.0' = {
     location: location
     kind: 'StorageV2'
     skuName: 'Standard_LRS'
-    allowSharedKeyAccess: false
+    allowSharedKeyAccess: true
     publicNetworkAccess: 'Enabled'
     blobServices: {
       containers: [

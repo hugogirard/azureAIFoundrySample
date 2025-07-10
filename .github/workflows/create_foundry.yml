@@ -95,13 +95,18 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
 
-      - run: terraform init
-        name: terraform init
-        working-directory: infra/terraform
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:            
+         path: infra/terraform/versions.tf
+          
+      # - run: terraform init
+      #   name: terraform init
+      #   working-directory: infra/terraform
 
-      - run: terraform plan
-        name: terraform plan
-        working-directory: infra/terraform
+      # - run: terraform plan
+      #   name: terraform plan
+      #   working-directory: infra/terraform
 
 #     #   - uses: actions/upload-artifact@v4.6.2
 #     #     name: 'upload param files'
