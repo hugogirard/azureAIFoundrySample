@@ -62,11 +62,6 @@ jobs:
         with:
           creds: ${{ secrets.SP_FOUNDRY }}
 
-#       # Temp fix
-#       - name: bicep tmp fix
-#         run: az config set bicep.use_binary_from_path=false
-
-
       - uses: cschleiden/replace-tokens@v1
         with:
             tokenPrefix: '__'
@@ -94,31 +89,14 @@ jobs:
             project_description: ${{ inputs.projectDescription }}
 
       - uses: hashicorp/setup-terraform@v3
-
-      # - name: Upload a Build Artifact
-      #   uses: actions/upload-artifact@v4.6.2
-      #   with:            
-      #    path: infra/terraform/versions.tf
           
       - run: terraform init
-        name: terraform init
+        name: Terraform init
         working-directory: infra/terraform
 
       - run: terraform plan
-        name: terraform plan
+        name: Terraform plan
         working-directory: infra/terraform
 
-#     #   - uses: actions/upload-artifact@v4.6.2
-#     #     name: 'upload param files'
-#     #     with:
-#     #       path: infra/bicep/main.bicepparam
-
-#       - name: deploy
-#         id: createResources
-#         uses: azure/arm-deploy@v2
-#         with:
-#           resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
-#           deploymentName: ${{ github.run_id }}
-#           template: ./infra/bicep/main.bicep
-#           failOnStdErr: false
-#           parameters: ./infra/bicep/main.bicepparam
+      - name: Terraform Apply
+        run: terraform apply -auto-approve         
