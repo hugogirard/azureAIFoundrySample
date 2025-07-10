@@ -18,21 +18,21 @@ resource "random_string" "unique" {
 data "azurerm_virtual_network" "vnet_foundry" {
   provider            = azurerm.workload_subscription
   name                = var.existing_vnet_name
-  resource_group_name = var.resource_group_name_resources
+  resource_group_name = var.vnet_resource_group_name
 }
 
 data "azurerm_subnet" "subnet_agent" {
   provider             = azurerm.workload_subscription
   name                 = var.existing_subnet_agent_name
   virtual_network_name = data.azurerm_virtual_network.vnet_foundry.name
-  resource_group_name  = var.resource_group_name_resources
+  resource_group_name  = var.vnet_resource_group_name
 }
 
 data "azurerm_subnet" "subnet_private_endpoint" {
   provider             = azurerm.workload_subscription
   name                 = var.existing_subnet_private_endpoint_name
   virtual_network_name = data.azurerm_virtual_network.vnet_foundry.name
-  resource_group_name  = var.resource_group_name_resources
+  resource_group_name  = var.vnet_resource_group_name
 }
 
 
