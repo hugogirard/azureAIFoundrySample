@@ -92,7 +92,7 @@ jobs:
       #   with:
       #     path: infra/terraform/variables.tf
 
-      # - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v3
           
       - run: terraform init
         name: Terraform init
