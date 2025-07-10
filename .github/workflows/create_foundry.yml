@@ -88,20 +88,20 @@ jobs:
             project_display_name: ${{ inputs.projectDisplayName }}
             project_description: ${{ inputs.projectDescription }}
       
-      - uses: actions/upload-artifact@v4
-        with:
-          path: infra/terraform/variables.tf
-          
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     path: infra/terraform/variables.tf
+
       # - uses: hashicorp/setup-terraform@v3
           
-      # - run: terraform init
-      #   name: Terraform init
-      #   working-directory: infra/terraform
+      - run: terraform init
+        name: Terraform init
+        working-directory: infra/terraform
 
-      # - run: terraform plan
-      #   name: Terraform plan
-      #   working-directory: infra/terraform
+      - run: terraform plan
+        name: Terraform plan
+        working-directory: infra/terraform
 
-      # - name: Terraform Apply
-      #   run: terraform apply -auto-approve         
-      #   working-directory: infra/terraform
+      - name: Terraform Apply
+        run: terraform apply -auto-approve         
+        working-directory: infra/terraform
