@@ -1,0 +1,38 @@
+name: Create Core Resources
+
+on:
+  workflow_dispatch:
+    inputs:
+      stateResourceGroupName:
+        description: 'The name of the resource group that will contain the terraform state'
+        required: true
+        type: string        
+        default: 'rg-tf-state'
+      storageAccountName:
+        description: 'The name of the storage account'
+        required: true
+        type: string
+        default: 'strtfstatehg28'        
+
+jobs:
+  create-core-resources:
+    env:
+      REGION: ${{ secrets.LOCATION }} # You can change this to reflect the region where you deploy your Accelerator
+      AZURE_CORE_OUTPUT: "none"
+
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: Azure/login@v2
+        with:
+          creds: ${{ secrets.SP_FOUNDRY }}
+          
+      - uses: hashicorp/setup-terraform@v3
+      
+      - name: create terraform state        
+        run: |
+          az group create -n ${{ inputs.stateResourceGroupName }} -l ${{ secrets.LOCATION }}
+        
