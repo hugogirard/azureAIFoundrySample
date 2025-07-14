@@ -92,3 +92,11 @@ jobs:
             containerName: ${{ inputs.containerName }}
             tenantID: ${{ secrets.AZURE_TENANT_ID }}
             subscriptionID: ${{ secrets.AZURE_SUBSCRIPTION }}
+
+      - run: terraform init
+        name: Terraform init
+        working-directory: infra/terraform
+
+      - run: terraform plan
+        name: Terraform plan
+        working-directory: infra/terraform            
