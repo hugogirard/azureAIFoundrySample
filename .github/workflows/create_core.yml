@@ -17,7 +17,12 @@ on:
         description: 'The name of the container that will have the state'
         required: true
         type: string
-        default: 'coretfstate'                    
+        default: 'coretfstate'        
+      deployAdmin:
+        description: 'Indicate if we deploy Azure API Management in a shared service landing zone'
+        required: true
+        type: boolean
+        default: false                  
 
 jobs:
   create-core-resources:
@@ -37,8 +42,53 @@ jobs:
           
       - uses: hashicorp/setup-terraform@v3
       
-      - name: create terraform state        
+      - name: create terraform state              
         run: |
           az group create -n ${{ inputs.stateResourceGroupName }} -l ${{ secrets.LOCATION }}
           az storage account create --name ${{ inputs.storageAccountName }} --resource-group ${{ inputs.stateResourceGroupName }} --location ${{ secrets.LOCATION }} --sku Standard_LRS --kind StorageV2
           az storage container create --name ${{ inputs.containerName }} --account-name ${{ inputs.storageAccountName }} --account-key $(az storage account keys list --resource-group ${{ inputs.stateResourceGroupName }} --account-name ${{ inputs.storageAccountName }} --query "[0].value" -o tsv)
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: TERRAFORM_STORAGE_NAME
+          value: ${{ inputs.storageAccountName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+          
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: TERRAFORM_STORAGE_RESOURCE_GROUP
+          value: ${{ inputs.stateResourceGroupName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: cschleiden/replace-tokens@v1
+        name: Update variables.tf
+        with:
+            tokenPrefix: '__'
+            tokenSuffix: '__'            
+            files: '["infra/createCoreResources/variables.tf"]'
+        env:
+            subscription_id_resources: ${{ secrets.AZURE_SUBSCRIPTION }}
+            location: ${{ secrets.LOCATION }}
+            resource_group_name_vnet: ${{ secrets.VNET_RESOURCE_GROUP_NAME }}
+            resource_group_name: ${{ secrets.RESOURCE_GROUP_NAME }}
+            resource_group_tf_state: ${{ secrets.TERRAFORM_STORAGE_RESOURCE_GROUP }}
+            subnet_agent_address_prefix: ${{ secrets.SUBNET_AGENT_ADDRESS_PREFIX }}
+            subnet_jumpbox_address_prefix: ${{ secrets.JUMPBOX_SUBNET_ADDRESS_PREFIX }}
+            subnet_private_endpoint_address_prefix: ${{ secrets.SUBNET_PRIVATE_ENDPOINT_ADDRESS_PREFIX }}
+            vnet_address_prefix: ${{ secrets.VNET_ADDRESS_PREFIX }}
+            admin_password: ${{ secrets.VM_PASSWORD }}
+            admin_username: ${{ secrets.VM_ADMIN }}
+            deploy_apim: ${{ inputs.deployAdmin }}
+
+      - uses: cschleiden/replace-tokens@v1
+        name: Update versions.tf
+        with:
+            tokenPrefix: '__'
+            tokenSuffix: '__'            
+            files: '["infra/createCoreResources/versions.tf"]'
+        env:
+            resourceGroupName: ${{ inputs.stateResourceGroupName }}            
+            storageAccountName: ${{ inputs.storageAccountName }}
+            containerName: ${{ inputs.containerName }}
+            tenantID: ${{ secrets.AZURE_TENANT_ID }}
+            subscriptionID: ${{ secrets.AZURE_SUBSCRIPTION }}

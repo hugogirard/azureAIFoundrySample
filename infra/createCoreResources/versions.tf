@@ -16,7 +16,7 @@ terraform {
   backend "azurerm" {
     resource_group_name  = "__resourceGroupName__"
     storage_account_name = "__storageAccountName__"
-    container_name       = "tfstate"
+    container_name       = "__containerName__"
     key                  = "core.tfstate"
     tenant_id            = "__tenantID__"
     subscription_id      = "__subscriptionID__"
