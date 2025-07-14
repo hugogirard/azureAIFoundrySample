@@ -1,5 +1,6 @@
 # Setup providers
 provider "azapi" {
+  storage_use_azuread = true
 }
 
 provider "azurerm" {
