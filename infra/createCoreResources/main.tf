@@ -20,11 +20,6 @@ resource "azurerm_resource_group" "rg_resources" {
   location = var.location
 }
 
-resource "azurerm_resource_group" "rg_tf_state" {
-  name     = var.resource_group_tf_state
-  location = var.location
-}
-
 # Networking
 resource "azurerm_network_security_group" "nsg_jumpbox" {
   name                = "nsg-jumpbox"

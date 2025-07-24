@@ -22,12 +22,6 @@ variable "resource_group_name" {
   default     = "__resource_group_name__"
 }
 
-variable "resource_group_tf_state" {
-  description = "The name of the resource group for Terraform state"
-  type        = string
-  default     = "__resource_group_tf_state__"
-}
-
 variable "subnet_agent_address_prefix" {
   description = "The address prefix for the agent subnet"
   type        = string

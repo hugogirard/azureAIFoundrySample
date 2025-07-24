@@ -76,7 +76,6 @@ jobs:
             location: ${{ secrets.LOCATION }}
             resource_group_name_vnet: ${{ secrets.VNET_RESOURCE_GROUP_NAME }}
             resource_group_name: ${{ secrets.RESOURCE_GROUP_NAME }}
-            resource_group_tf_state: ${{ secrets.TERRAFORM_STORAGE_RESOURCE_GROUP }}
             subnet_agent_address_prefix: ${{ secrets.SUBNET_AGENT_ADDRESS_PREFIX }}
             subnet_jumpbox_address_prefix: ${{ secrets.JUMPBOX_SUBNET_ADDRESS_PREFIX }}
             subnet_private_endpoint_address_prefix: ${{ secrets.SUBNET_PRIVATE_ENDPOINT_ADDRESS_PREFIX }}
