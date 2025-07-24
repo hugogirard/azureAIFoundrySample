@@ -51,7 +51,7 @@ jobs:
             az role assignment create --assignee ${{ secrets.SP_FOUNDRY_APP_ID }} --role "Storage Blob Data Contributor" --scope /subscriptions/${{ secrets.AZURE_SUBSCRIPTION }}/resourceGroups/${{ inputs.stateResourceGroupName }}/providers/Microsoft.Storage/storageAccounts/${{ inputs.storageAccountName }}
             sleep 120          
           fi          
-          az storage account update --name ${{ inputs.storageAccountName }} --resource-group ${{ inputs.stateResourceGroupName }} --set allowBlobPublicAccess=true
+          az storage account update --name ${{ inputs.storageAccountName }} --resource-group ${{ inputs.stateResourceGroupName }} --default-action Allow          
       - uses: gliech/create-github-secret-action@v1
         with:
           name: TERRAFORM_STORAGE_NAME
