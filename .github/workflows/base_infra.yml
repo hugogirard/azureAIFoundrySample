@@ -1,12 +1,18 @@
-name: Create Bicep Core Resources
+name: Create Core Resources
 
 on:
   workflow_dispatch:
+    inputs: 
+      deployAdmin:
+        description: 'Indicate if we deploy Azure API Management in a shared service landing zone'
+        required: true
+        type: boolean
+        default: false  
 
 jobs:
   create-azure-resources:
     env:
-      REGION: "eastus2" # You can change this to reflect the region where you deploy your Accelerator
+      REGION: ${{ secrets.LOCATION }} # You can change this to reflect the region where you deploy your Accelerator
       AZURE_CORE_OUTPUT: "none"
 
     runs-on: ubuntu-latest
@@ -14,121 +20,118 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-#       - name: Azure Login
-#         uses: Azure/login@v2
-#         with:
-#           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Azure Login
+        uses: Azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-#       # Temp fix
-#       - name: bicep tmp fix
-#         run: az config set bicep.use_binary_from_path=false
+      # Temp fix
+      - name: bicep tmp fix
+        run: az config set bicep.use_binary_from_path=false
 
-#       - name: deploy
-#         id: createResources
-#         uses: azure/arm-deploy@v2
-#         with:
-#           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-#           scope: subscription
-#           region: ${{ env.REGION }}
-#           deploymentName: ${{ github.run_id }}
-#           template: ./infra/createEnv/main.bicep
-#           failOnStdErr: false
-#           parameters: ./infra/createEnv/main.bicepparam adminPassword=${{ secrets.VM_PASSWORD }} adminUserName=${{ secrets.VM_ADMIN }}
+      - uses: cschleiden/replace-tokens@v1
+        name: Update variables.tf
+        with:
+            tokenPrefix: '__'
+            tokenSuffix: '__'            
+            files: '["infra/base/main.bicepparam"]'
+        env:            
+            location: ${{ secrets.LOCATION }}
+            resourceGroupNameVNET: ${{ secrets.VNET_RESOURCE_GROUP_NAME }}
+            resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+            subnetAgentAddressPrefix: ${{ secrets.SUBNET_AGENT_ADDRESS_PREFIX }}
+            subnetJumpboxAddressPrefix: ${{ secrets.JUMPBOX_SUBNET_ADDRESS_PREFIX }}
+            subnetPrivateEndpointAddressPrefix: ${{ secrets.SUBNET_PRIVATE_ENDPOINT_ADDRESS_PREFIX }}
+            vnetAddressPrefix: ${{ secrets.VNET_ADDRESS_PREFIX }}            
 
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: RESOURCE_GROUP_NAME
-#           value: ${{ steps.createResources.outputs.resourceGroupName }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
+      - name: deploy
+        id: createResources
+        uses: azure/arm-deploy@v2
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          scope: subscription
+          region: ${{ env.REGION }}
+          deploymentName: ${{ github.run_id }}
+          template: ./infra/base/main.bicep
+          failOnStdErr: false
+          parameters: ./infra/base/main.bicepparam adminPassword=${{ secrets.VM_PASSWORD }} adminUserName=${{ secrets.VM_ADMIN }}
 
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: LOCATION
-#           value: ${{ steps.createResources.outputs.location }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: RESOURCE_GROUP_NAME
+          value: ${{ steps.createResources.outputs.resourceGroupName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
 
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: VNET_RESOURCE_NAME
-#           value: ${{ steps.createResources.outputs.vnetResourceName }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: LOCATION
+          value: ${{ steps.createResources.outputs.location }}
+          pa_token: ${{ secrets.PA_TOKEN }}
 
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: VNET_RESOURCE_GROUP_NAME
-#           value: ${{ steps.createResources.outputs.vnetResourceGroupName }}
-#           pa_token: ${{ secrets.PA_TOKEN }}          
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: VNET_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.vnetResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: VNET_RESOURCE_GROUP_NAME
+          value: ${{ steps.createResources.outputs.vnetResourceGroupName }}
+          pa_token: ${{ secrets.PA_TOKEN }}          
     
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: SUBNET_AGENT_RESOURCE_NAME
-#           value: ${{ steps.createResources.outputs.subnetAgentResourceName }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: SUBNET_AGENT_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.subnetAgentResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
 
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: SUBNET_PRIVATE_ENDPOINT_RESOURCE_NAME
-#           value: ${{ steps.createResources.outputs.subnetPrivateEndpointResourceName }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: SUBNET_PRIVATE_ENDPOINT_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.subnetPrivateEndpointResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
 
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: AI_SERVICES_PRIVATE_DNS_ZONE_RESOURCE_NAME
-#           value: ${{ steps.createResources.outputs.aiServicesPrivateDnsZoneResourceName }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: AI_SERVICES_PRIVATE_DNS_ZONE_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.aiServicesPrivateDnsZoneResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
 
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: COGNITIVE_SERVICES_PRIVATE_DNS_ZONE_RESOURCE_NAME
-#           value: ${{ steps.createResources.outputs.cognitiveServicesPrivateDnsZoneResourceName }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: COGNITIVE_SERVICES_PRIVATE_DNS_ZONE_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.cognitiveServicesPrivateDnsZoneResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
 
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: OPEN_AI_PRIVATE_DNS_ZONE_RESOURCE_NAME
-#           value: ${{ steps.createResources.outputs.openAiPrivateDnsZoneResourceName }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: OPEN_AI_PRIVATE_DNS_ZONE_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.openAiPrivateDnsZoneResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
 
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: PRIVATE_DNS_RESOURCE_GROUP_NAME
-#           value: ${{ steps.createResources.outputs.privateDnsResourceGroupName }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: PRIVATE_DNS_RESOURCE_GROUP_NAME
+          value: ${{ steps.createResources.outputs.privateDnsResourceGroupName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
 
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: AI_SEARCH_RESOURCE_NAME
-#           value: ${{ steps.createResources.outputs.aiSearchResourceName }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: AI_SEARCH_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.aiSearchResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
 
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: AZURE_COSMOS_DB_ACCOUNT_RESOURCE_NAME
-#           value: ${{ steps.createResources.outputs.azureCosmosDBAccountResourceName }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: AZURE_COSMOS_DB_ACCOUNT_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.azureCosmosDBAccountResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
 
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: STORAGE_ACCOUNT_RESOURCE_NAME
-#           value: ${{ steps.createResources.outputs.storageAccountResourceName }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
-
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: TF_STORAGE_ENDPOINT
-#           value: ${{ steps.createResources.outputs.terraformStateEndpoint }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
-
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: TERRAFORM_STORAGE_NAME
-#           value: ${{ steps.createResources.outputs.terraformStorageName }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
-          
-#       - uses: gliech/create-github-secret-action@v1
-#         with:
-#           name: TERRAFORM_STORAGE_RESOURCE_GROUP
-#           value: ${{ steps.createResources.outputs.terraformStorageResourceGroup }}
-#           pa_token: ${{ secrets.PA_TOKEN }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: STORAGE_ACCOUNT_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.storageAccountResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
 
 

@@ -4,8 +4,6 @@ param resourceGroupNameVNET string
 
 param resourceGroupName string
 
-param resourceGroupTFState string
-
 param vnetAddressPrefix string
 
 param subnetAgentAddressPrefix string
@@ -38,11 +36,6 @@ resource rgVNET 'Microsoft.Resources/resourceGroups@2025-04-01' = {
 
 resource rgResources 'Microsoft.Resources/resourceGroups@2025-04-01' = {
   name: resourceGroupName
-  location: location
-}
-
-resource rgTFState 'Microsoft.Resources/resourceGroups@2025-04-01' = {
-  name: resourceGroupTFState
   location: location
 }
 
@@ -94,17 +87,6 @@ module privateDnsZone 'br/public:avm/res/network/private-dns-zone:0.7.1' = [
           virtualNetworkResourceId: virtualNetwork.outputs.resourceId
         }
       ]
-      // a: [
-      //   {
-      //     aRecords: [
-      //       {
-      //         ipv4Address: jumpbox.outputs.nicConfigurations[0].ipConfigurations[0].privateIP
-      //       }
-      //     ]
-      //     name: jumpbox.outputs.name
-      //     ttl: 10
-      //   }
-      // ]
     }
   }
 ]
@@ -132,29 +114,6 @@ module searchService 'br/public:avm/res/search/search-service:0.10.0' = {
       }
     ]
     publicNetworkAccess: 'Disabled'
-  }
-}
-
-module tfState 'br/public:avm/res/storage/storage-account:0.25.0' = {
-  scope: rgTFState
-  params: {
-    name: 'strtf${replace(suffix,'-','')}'
-    location: location
-    kind: 'StorageV2'
-    skuName: 'Standard_LRS'
-    allowSharedKeyAccess: true
-    publicNetworkAccess: 'Enabled'
-    blobServices: {
-      containers: [
-        {
-          name: 'tfstate'
-          publicAccess: 'None'
-        }
-      ]
-    }
-    tags: {
-      role: 'terraformstate'
-    }
   }
 }
 
@@ -291,6 +250,3 @@ output privateDnsResourceGroupName string = rgVNET.name
 output aiSearchResourceName string = searchService.outputs.name
 output azureCosmosDBAccountResourceName string = databaseAccount.outputs.name
 output storageAccountResourceName string = storageAccount.outputs.name
-output terraformStateEndpoint string = tfState.outputs.primaryBlobEndpoint
-output terraformStorageName string = tfState.outputs.name
-output terraformStorageResourceGroup string = rgTFState.name
