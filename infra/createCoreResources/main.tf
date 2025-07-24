@@ -35,7 +35,7 @@ resource "azurerm_network_security_group" "nsg_jumpbox" {
 resource "azurerm_virtual_network" "vnet" {
   name                = "vnet-ai"
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg_resources.name
+  resource_group_name = azurerm_resource_group.rg_vnet.name
   address_space       = [var.vnet_address_prefix]
 
   subnet {
@@ -47,9 +47,9 @@ resource "azurerm_virtual_network" "vnet" {
 
 resource "azurerm_subnet" "subnet_agent" {
   name                 = "snet-agent"
-  resource_group_name  = azurerm_resource_group.rg_resources.name
+  resource_group_name  = azurerm_resource_group.rg_vnet.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = [
+  address_prefixes = [
     var.subnet_agent_address_prefix
   ]
   delegation {
@@ -62,9 +62,9 @@ resource "azurerm_subnet" "subnet_agent" {
 
 resource "azurerm_subnet" "subnet_pe" {
   name                 = "snet-pe"
-  resource_group_name  = azurerm_resource_group.rg_resources.name
+  resource_group_name  = azurerm_resource_group.rg_vnet.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = [
+  address_prefixes = [
     var.subnet_private_endpoint_address_prefix
   ]
 }
