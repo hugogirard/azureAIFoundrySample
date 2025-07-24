@@ -45,12 +45,13 @@ jobs:
       - name: create terraform state              
         run: |
           if ! az group exists -n ${{ inputs.stateResourceGroupName }}; then
-            az group create -n ${{ inputs.stateResourceGroupName }} -l ${{ secrets.LOCATION }}
+            az group create -n ${{ inputs.stateResourceGroupName }} -l ${{ secrets.LOCATION }}          
             az storage account create --name ${{ inputs.storageAccountName }} --resource-group ${{ inputs.stateResourceGroupName }} --location ${{ secrets.LOCATION }} --sku Standard_LRS --kind StorageV2
             az storage container create --name ${{ inputs.containerName }} --account-name ${{ inputs.storageAccountName }} --account-key $(az storage account keys list --resource-group ${{ inputs.stateResourceGroupName }} --account-name ${{ inputs.storageAccountName }} --query "[0].value" -o tsv)
             az role assignment create --assignee ${{ secrets.SP_FOUNDRY_APP_ID }} --role "Storage Blob Data Contributor" --scope /subscriptions/${{ secrets.AZURE_SUBSCRIPTION }}/resourceGroups/${{ inputs.stateResourceGroupName }}/providers/Microsoft.Storage/storageAccounts/${{ inputs.storageAccountName }}
             sleep 120          
-          fi
+          fi          
+          az storage account update --name ${{ inputs.storageAccountName }} --resource-group ${{ inputs.stateResourceGroupName }} --set allowBlobPublicAccess=true
       - uses: gliech/create-github-secret-action@v1
         with:
           name: TERRAFORM_STORAGE_NAME
