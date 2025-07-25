@@ -4,8 +4,6 @@ param resourceGroupNameVNET string
 
 param resourceGroupName string
 
-param sharedServiceResourceGroupName string
-
 param vnetAddressPrefix string
 
 param subnetAgentAddressPrefix string
@@ -15,8 +13,6 @@ param subnetPrivateEndpointAddressPrefix string
 param subnetJumpboxAddressPrefix string
 
 param apimSubnetAddressPrefix string
-
-param deployApim bool
 
 param publisherEmail string
 
@@ -49,15 +45,111 @@ resource rgResources 'Microsoft.Resources/resourceGroups@2025-04-01' = {
   location: location
 }
 
-resource rgSharedResources 'Microsoft.Resources/resourceGroups@2025-04-01' = {
-  name: sharedServiceResourceGroupName
-  location: location
-}
-
 module nsg 'br/public:avm/res/network/network-security-group:0.5.1' = {
   scope: rgVNET
   params: {
     name: 'nsg-jumpbox'
+  }
+}
+
+module apiNsg 'br/public:avm/res/network/network-security-group:0.5.1' = {
+  scope: rgVNET
+  params: {
+    name: 'nsg-apim'
+    location: location
+    securityRules: [
+      {
+        name: 'AllowApimManagement'
+        properties: {
+          priority: 2000
+          sourceAddressPrefix: 'ApiManagement'
+          protocol: 'Tcp'
+          destinationPortRange: '3443'
+          access: 'Allow'
+          direction: 'Inbound'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'VirtualNetwork'
+        }
+      }
+      {
+        name: 'AllowAzureLoadBalancer'
+        properties: {
+          priority: 2010
+          sourceAddressPrefix: 'AzureLoadBalancer'
+          protocol: 'Tcp'
+          destinationPortRange: '6390'
+          access: 'Allow'
+          direction: 'Inbound'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'VirtualNetwork'
+        }
+      }
+      {
+        name: 'AllowAzureTrafficManager'
+        properties: {
+          priority: 2020
+          sourceAddressPrefix: 'AzureTrafficManager'
+          protocol: 'Tcp'
+          destinationPortRange: '443'
+          access: 'Allow'
+          direction: 'Inbound'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'VirtualNetwork'
+        }
+      }
+      {
+        name: 'AllowStorage'
+        properties: {
+          priority: 2000
+          sourceAddressPrefix: 'VirtualNetwork'
+          protocol: 'Tcp'
+          destinationPortRange: '443'
+          access: 'Allow'
+          direction: 'Outbound'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'Storage'
+        }
+      }
+      {
+        name: 'AllowSql'
+        properties: {
+          priority: 2010
+          sourceAddressPrefix: 'VirtualNetwork'
+          protocol: 'Tcp'
+          destinationPortRange: '1433'
+          access: 'Allow'
+          direction: 'Outbound'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'SQL'
+        }
+      }
+      {
+        name: 'AllowKeyVault'
+        properties: {
+          priority: 2020
+          sourceAddressPrefix: 'VirtualNetwork'
+          protocol: 'Tcp'
+          destinationPortRange: '443'
+          access: 'Allow'
+          direction: 'Outbound'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'AzureKeyVault'
+        }
+      }
+      {
+        name: 'AllowMonitor'
+        properties: {
+          priority: 2030
+          sourceAddressPrefix: 'VirtualNetwork'
+          protocol: 'Tcp'
+          destinationPortRanges: ['1886', '443']
+          access: 'Allow'
+          direction: 'Outbound'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'AzureMonitor'
+        }
+      }
+    ]
   }
 }
 
@@ -86,6 +178,11 @@ module virtualNetwork 'br/public:avm/res/network/virtual-network:0.7.0' = {
         addressPrefix: subnetJumpboxAddressPrefix
         networkSecurityGroupResourceId: nsg.outputs.resourceId
       }
+      {
+        name: 'snet-apim'
+        addressPrefix: apimSubnetAddressPrefix
+        networkSecurityGroupResourceId: apiNsg.outputs.resourceId
+      }
     ]
   }
 }
@@ -108,6 +205,30 @@ module privateDnsZone 'br/public:avm/res/network/private-dns-zone:0.7.1' = [
 ]
 
 var suffix = uniqueString(rgResources.id)
+
+/* APIM */
+module pip 'br/public:avm/res/network/public-ip-address:0.9.0' = {
+  scope: rgVNET
+  params: {
+    name: 'pip-apim'
+  }
+}
+
+module apim 'br/public:avm/res/api-management/service:0.9.1' = {
+  scope: rgResources
+  params: {
+    // Required parameters
+    name: 'api-${suffix}'
+    publisherEmail: publisherEmail
+    publisherName: publisherName
+    // Non-required parameters
+    enableDeveloperPortal: true
+    sku: 'Developer'
+    virtualNetworkType: 'External'
+    subnetResourceId: virtualNetwork.outputs.subnetResourceIds[3]
+    publicIpAddressResourceId: pip.outputs.resourceId
+  }
+}
 
 module searchService 'br/public:avm/res/search/search-service:0.10.0' = {
   scope: rgResources
@@ -255,17 +376,6 @@ module jumpboxARecord 'create_dns_record.bicep' = [
     }
   }
 ]
-
-module apim 'shared.services.bicep' = {
-  scope: rgSharedResources
-  params: {
-    location: location
-    publisherEmail: publisherEmail
-    publisherName: publisherName
-    subnetAddressPrefix: apimSubnetAddressPrefix
-    suffix: suffix
-  }
-}
 
 output resourceGroupName string = rgResources.name
 output location string = location

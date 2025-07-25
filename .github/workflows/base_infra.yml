@@ -33,7 +33,6 @@ jobs:
             location: ${{ secrets.LOCATION }}
             resourceGroupNameVNET: ${{ secrets.VNET_RESOURCE_GROUP_NAME }}
             resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
-            sharedServiceResourceGroupName: ${{ secrets.SHARED_SERVICE_RESOURCE_GROUP_NAME }}
             subnetAgentAddressPrefix: ${{ secrets.SUBNET_AGENT_ADDRESS_PREFIX }}
             subnetJumpboxAddressPrefix: ${{ secrets.JUMPBOX_SUBNET_ADDRESS_PREFIX }}
             subnetPrivateEndpointAddressPrefix: ${{ secrets.SUBNET_PRIVATE_ENDPOINT_ADDRESS_PREFIX }}
