@@ -2,12 +2,6 @@ name: Create Core Resources
 
 on:
   workflow_dispatch:
-    inputs: 
-      deployAdmin:
-        description: 'Indicate if we deploy Azure API Management in a shared service landing zone'
-        required: true
-        type: boolean
-        default: false  
 
 jobs:
   create-azure-resources:
@@ -57,7 +51,7 @@ jobs:
           deploymentName: ${{ github.run_id }}
           template: ./infra/base/main.bicep
           failOnStdErr: false
-          parameters: ./infra/base/main.bicepparam adminPassword=${{ secrets.VM_PASSWORD }} adminUserName=${{ secrets.VM_ADMIN }} deployApim=${{ inputs.deployAdmin }}
+          parameters: ./infra/base/main.bicepparam adminPassword=${{ secrets.VM_PASSWORD }} adminUserName=${{ secrets.VM_ADMIN }}
 
       # - uses: gliech/create-github-secret-action@v1
       #   with:

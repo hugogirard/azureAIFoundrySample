@@ -20,7 +20,7 @@ param adminPassword = ''
 
 param adminUserName = ''
 
-param deployApim = false
+param deployApim = true
 
 param publisherEmail = '__publisherEmail__'
 
