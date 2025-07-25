@@ -23,10 +23,14 @@ Here is the list of secrets you need to create:
 5. **JUMPBOX_SUBNET_ADDRESS_PREFIX**: The address prefix for the jumpbox subnet.
 6. **SUBNET_PRIVATE_ENDPOINT_ADDRESS_PREFIX**: The address prefix for the private endpoint subnet.
 7. **VNET_ADDRESS_PREFIX**: The address prefix for the VNet.
-8. **VM_PASSWORD**: The password for the Windows jumpbox.
-9. **VM_ADMIN**: The admin username for the Windows jumpbox.
-10. **PA_TOKEN**: Personal Access Token for creating GitHub secrets.
-11. **AZURE_CREDENTIALS**: Azure credentials for logging in.
+8. **SUBNET_APIM_ADDRESS_PREFIX**: The address prefix for the APIM subnet.
+9. **PUBLISHER_EMAIL**: The email address of the publisher for APIM.
+10. **PUBLISHER_NAME**: The name of the publisher for APIM.
+11. **VM_PASSWORD**: The password for the Windows jumpbox.
+12. **VM_ADMIN**: The admin username for the Windows jumpbox.
+13. **PA_TOKEN**: Personal Access Token for creating GitHub secrets.
+14. **AZURE_CREDENTIALS**: Azure credentials for logging in.
+15. **AZURE_SUBSCRIPTION**: The Azure subscription ID.
 
 ### 🛠️ Creating the Service Principal
 

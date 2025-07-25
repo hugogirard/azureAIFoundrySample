@@ -42,7 +42,10 @@ jobs:
             subnetAgentAddressPrefix: ${{ secrets.SUBNET_AGENT_ADDRESS_PREFIX }}
             subnetJumpboxAddressPrefix: ${{ secrets.JUMPBOX_SUBNET_ADDRESS_PREFIX }}
             subnetPrivateEndpointAddressPrefix: ${{ secrets.SUBNET_PRIVATE_ENDPOINT_ADDRESS_PREFIX }}
-            vnetAddressPrefix: ${{ secrets.VNET_ADDRESS_PREFIX }}            
+            vnetAddressPrefix: ${{ secrets.VNET_ADDRESS_PREFIX }}
+            apimSubnetAddressPrefix: ${{ secrets.SUBNET_APIM_ADDRESS_PREFIX }}
+            publisherEmail: ${{ secrets.PUBLISHER_EMAIL }}
+            publisherName: ${{ secrets.PUBLISHER_NAME }}
 
       - name: deploy
         id: createResources

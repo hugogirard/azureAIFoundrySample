@@ -4,6 +4,8 @@ param resourceGroupNameVNET string
 
 param resourceGroupName string
 
+param sharedServiceResourceGroupName string
+
 param vnetAddressPrefix string
 
 param subnetAgentAddressPrefix string
@@ -11,6 +13,14 @@ param subnetAgentAddressPrefix string
 param subnetPrivateEndpointAddressPrefix string
 
 param subnetJumpboxAddressPrefix string
+
+param apimSubnetAddressPrefix string
+
+param deployApim bool
+
+param publisherEmail string
+
+param publisherName string
 
 @secure()
 param adminUserName string
@@ -36,6 +46,11 @@ resource rgVNET 'Microsoft.Resources/resourceGroups@2025-04-01' = {
 
 resource rgResources 'Microsoft.Resources/resourceGroups@2025-04-01' = {
   name: resourceGroupName
+  location: location
+}
+
+resource rgSharedResources 'Microsoft.Resources/resourceGroups@2025-04-01' = if (deployApim) {
+  name: sharedServiceResourceGroupName
   location: location
 }
 
@@ -240,6 +255,17 @@ module jumpboxARecord 'create_dns_record.bicep' = [
     }
   }
 ]
+
+module apim 'shared.services.bicep' = if (deployApim) {
+  scope: rgSharedResources
+  params: {
+    location: location
+    publisherEmail: publisherEmail
+    publisherName: publisherName
+    subnetAddressPrefix: apimSubnetAddressPrefix
+    suffix: suffix
+  }
+}
 
 output resourceGroupName string = rgResources.name
 output location string = location
