@@ -49,7 +49,7 @@ resource rgResources 'Microsoft.Resources/resourceGroups@2025-04-01' = {
   location: location
 }
 
-resource rgSharedResources 'Microsoft.Resources/resourceGroups@2025-04-01' = if (deployApim) {
+resource rgSharedResources 'Microsoft.Resources/resourceGroups@2025-04-01' = {
   name: sharedServiceResourceGroupName
   location: location
 }
@@ -256,7 +256,7 @@ module jumpboxARecord 'create_dns_record.bicep' = [
   }
 ]
 
-module apim 'shared.services.bicep' = if (deployApim) {
+module apim 'shared.services.bicep' = {
   scope: rgSharedResources
   params: {
     location: location
