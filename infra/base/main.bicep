@@ -91,7 +91,7 @@ module privateDnsZone 'br/public:avm/res/network/private-dns-zone:0.7.1' = [
     }
   }
 ]
-/* 
+
 var suffix = uniqueString(rgResources.id)
 
 module searchService 'br/public:avm/res/search/search-service:0.10.0' = {
@@ -177,7 +177,7 @@ module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' =
     ]
   }
 }
-
+/* 
 module jumpbox 'br/public:avm/res/compute/virtual-machine:0.15.1' = {
   scope: rgVNET
   params: {
