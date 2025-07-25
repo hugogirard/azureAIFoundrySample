@@ -177,7 +177,7 @@ module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' =
     ]
   }
 }
-/* 
+
 module jumpbox 'br/public:avm/res/compute/virtual-machine:0.15.1' = {
   scope: rgVNET
   params: {
@@ -225,10 +225,13 @@ module jumpbox 'br/public:avm/res/compute/virtual-machine:0.15.1' = {
   }
 }
 
-// Add the A Record of the Jumpbox
+//Add the A Record of the Jumpbox
 module jumpboxARecord 'create_dns_record.bicep' = [
   for name in dnsZones: {
     scope: rgVNET
+    dependsOn: [
+      privateDnsZone
+    ]
     params: {
       recordName: jumpbox.outputs.name
       #disable-next-line all
@@ -251,4 +254,3 @@ output privateDnsResourceGroupName string = rgVNET.name
 output aiSearchResourceName string = searchService.outputs.name
 output azureCosmosDBAccountResourceName string = databaseAccount.outputs.name
 output storageAccountResourceName string = storageAccount.outputs.name
- */
