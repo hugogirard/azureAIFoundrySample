@@ -74,7 +74,7 @@ module virtualNetwork 'br/public:avm/res/network/virtual-network:0.7.0' = {
     ]
   }
 }
-/* 
+
 module privateDnsZone 'br/public:avm/res/network/private-dns-zone:0.7.1' = [
   for name in dnsZones: {
     scope: rgVNET
@@ -91,7 +91,7 @@ module privateDnsZone 'br/public:avm/res/network/private-dns-zone:0.7.1' = [
     }
   }
 ]
-
+/* 
 var suffix = uniqueString(rgResources.id)
 
 module searchService 'br/public:avm/res/search/search-service:0.10.0' = {
