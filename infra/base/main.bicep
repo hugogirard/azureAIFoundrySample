@@ -40,7 +40,7 @@ resource rgResources 'Microsoft.Resources/resourceGroups@2025-04-01' = {
 }
 
 module nsg 'br/public:avm/res/network/network-security-group:0.5.1' = {
-  scope: rgResources
+  scope: rgVNET
   params: {
     name: 'nsg-jumpbox'
   }
@@ -74,10 +74,11 @@ module virtualNetwork 'br/public:avm/res/network/virtual-network:0.7.0' = {
     ]
   }
 }
-
+/* 
 module privateDnsZone 'br/public:avm/res/network/private-dns-zone:0.7.1' = [
   for name in dnsZones: {
     scope: rgVNET
+    name: 'create-dns-${name}'
     params: {
       // Required parameters
       name: name
@@ -178,7 +179,7 @@ module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' =
 }
 
 module jumpbox 'br/public:avm/res/compute/virtual-machine:0.15.1' = {
-  scope: rgResources
+  scope: rgVNET
   params: {
     adminUsername: adminUserName
     imageReference: {
@@ -250,3 +251,4 @@ output privateDnsResourceGroupName string = rgVNET.name
 output aiSearchResourceName string = searchService.outputs.name
 output azureCosmosDBAccountResourceName string = databaseAccount.outputs.name
 output storageAccountResourceName string = storageAccount.outputs.name
+ */
