@@ -226,7 +226,7 @@ module apim 'br/public:avm/res/api-management/service:0.9.1' = {
     sku: 'Developer'
     virtualNetworkType: 'External'
     subnetResourceId: virtualNetwork.outputs.subnetResourceIds[3]
-    publicIpAddressResourceId: pip.outputs.resourceId
+    //publicIpAddressResourceId: pip.outputs.resourceId
   }
 }
 
