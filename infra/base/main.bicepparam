@@ -6,8 +6,6 @@ param resourceGroupNameVNET = '__resourceGroupNameVNET__'
 
 param resourceGroupName = '__resourceGroupName__'
 
-param sharedServiceResourceGroupName = '__sharedServiceResourceGroupName__'
-
 param subnetAgentAddressPrefix = '__subnetAgentAddressPrefix__'
 
 param subnetJumpboxAddressPrefix = '__subnetJumpboxAddressPrefix__'
@@ -19,8 +17,6 @@ param vnetAddressPrefix = '__vnetAddressPrefix__'
 param adminPassword = ''
 
 param adminUserName = ''
-
-param deployApim = true
 
 param publisherEmail = '__publisherEmail__'
 
