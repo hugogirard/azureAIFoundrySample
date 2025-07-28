@@ -85,6 +85,12 @@ jobs:
 
       - uses: gliech/create-github-secret-action@v1
         with:
+          name: SUBNET_AGENT_ID
+          value: ${{ steps.createResources.outputs.subnetAgentResourceId }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
           name: SUBNET_PRIVATE_ENDPOINT_RESOURCE_NAME
           value: ${{ steps.createResources.outputs.subnetPrivateEndpointResourceName }}
           pa_token: ${{ secrets.PA_TOKEN }}

@@ -23,33 +23,23 @@ jobs:
       - name: bicep tmp fix
         run: az config set bicep.use_binary_from_path=false
 
-    #   - uses: cschleiden/replace-tokens@v1
-    #     name: Update bicepparam
-    #     with:
-    #         tokenPrefix: '__'
-    #         tokenSuffix: '__'            
-    #         files: '["infra/base/main.bicepparam"]'
-    #     env:            
-    #         location: ${{ secrets.LOCATION }}
-    #         resourceGroupNameVNET: ${{ secrets.VNET_RESOURCE_GROUP_NAME }}
-    #         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
-    #         subnetAgentAddressPrefix: ${{ secrets.SUBNET_AGENT_ADDRESS_PREFIX }}
-    #         subnetJumpboxAddressPrefix: ${{ secrets.JUMPBOX_SUBNET_ADDRESS_PREFIX }}
-    #         subnetPrivateEndpointAddressPrefix: ${{ secrets.SUBNET_PRIVATE_ENDPOINT_ADDRESS_PREFIX }}
-    #         vnetAddressPrefix: ${{ secrets.VNET_ADDRESS_PREFIX }}
-    #         apimSubnetAddressPrefix: ${{ secrets.SUBNET_APIM_ADDRESS_PREFIX }}
-    #         publisherEmail: ${{ secrets.PUBLISHER_EMAIL }}
-    #         publisherName: ${{ secrets.PUBLISHER_NAME }}
+      - uses: cschleiden/replace-tokens@v1
+        name: Update bicepparam
+        with:
+            tokenPrefix: '__'
+            tokenSuffix: '__'            
+            files: '["infra/foundry/main.bicepparam"]'
+        env:            
+            location: ${{ secrets.LOCATION }}
+            subnetAgentResourceId: ${{ secrets.SUBNET_AGENT_ID }}
 
-    #   - name: deploy
-    #     id: createResources
-    #     uses: azure/arm-deploy@v2
-    #     with:
-    #       subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-    #       scope: subscription
-    #       region: ${{ env.REGION }}
-    #       deploymentName: ${{ github.run_id }}
-    #       template: ./infra/base/main.bicep
-    #       failOnStdErr: false
-    #       parameters: ./infra/base/main.bicepparam adminPassword=${{ secrets.VM_PASSWORD }} adminUserName=${{ secrets.VM_ADMIN }}
+      - name: deploy
+        id: createResources
+        uses: azure/arm-deploy@v2
+        with:
+          resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+          deploymentName: ${{ github.run_id }}
+          template: ./infra/foundry/main.bicep
+          failOnStdErr: false
+          parameters: ./infra/foundry/main.bicepparam
 
