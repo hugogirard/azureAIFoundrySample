@@ -1,0 +1,69 @@
+name: Create AI Foundry Project
+
+on:
+  workflow_dispatch:
+    inputs:
+      projectName:
+        description: 'Name of the AI Foundry project'
+        required: true
+        type: string
+        default: 'contoso'
+      projectDisplayName:
+        description: 'Display name in Foundry of the AI Project'
+        required: true
+        type: string
+        default: 'Contoso'      
+      projectDescription:
+        description: 'Description of the project'
+        required: true
+        type: string
+        default: 'Contoso project with Agents'
+
+jobs:
+  create-foundry-project:
+    env:
+      AZURE_CORE_OUTPUT: "none"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: Azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Temp fix
+      - name: bicep tmp fix
+        run: az config set bicep.use_binary_from_path=false
+
+      - uses: cschleiden/replace-tokens@v1
+        name: Update bicepparam
+        with:
+            tokenPrefix: '__'
+            tokenSuffix: '__'            
+            files: '["infra/project/main.bicepparam"]'
+        env:            
+            location: ${{ secrets.LOCATION }}
+            aiSearchResourceName: ${{ secrets.AI_SEARCH_RESOURCE_NAME }}
+            cosmosDbResourceName: ${{ secrets.AZURE_COSMOS_DB_ACCOUNT_RESOURCE_NAME }}
+            foundryResourceName: ${{ secrets.FOUNDRY_RESOURCE_NAME }}
+            storageResourceName: ${{ secrets.STORAGE_ACCOUNT_RESOURCE_NAME }}
+            projectDescription: ${{ inputs.projectDescription }}
+            projectDisplayName: ${{ inputs.projectDisplayName }}
+            projectName: ${{ inputs.projectName }}
+
+
+      - name: deploy
+        id: createResources
+        uses: azure/arm-deploy@v2
+        with:
+          resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+          deploymentName: ${{ github.run_id }}
+          template: ./infra/project/main.bicep
+          failOnStdErr: false
+          parameters: ./infra/project/main.bicepparam
+
+    
+
