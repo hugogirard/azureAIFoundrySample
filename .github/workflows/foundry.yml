@@ -32,6 +32,11 @@ jobs:
         env:            
             location: ${{ secrets.LOCATION }}
             subnetAgentResourceId: ${{ secrets.SUBNET_AGENT_ID }}
+            aiServiceDnsZoneName: ${{ secrets.AI_SERVICES_PRIVATE_DNS_ZONE_RESOURCE_NAME }}
+            cognitiveServicesDnsZoneName: ${{ secrets.COGNITIVE_SERVICES_PRIVATE_DNS_ZONE_RESOURCE_NAME }}
+            openAiDnsZoneName: ${{ secrets.OPEN_AI_PRIVATE_DNS_ZONE_RESOURCE_NAME }}
+            privateDNSResourceGroupName: ${{ secrets.PRIVATE_DNS_RESOURCE_GROUP_NAME }}
+            subnetPrivateEndpointResourceId: ${{ secrets.SUBNET_PRIVATE_ENDPOINT_ID }}
 
       - name: deploy
         id: createResources

@@ -382,6 +382,7 @@ output location string = location
 output vnetResourceName string = virtualNetwork.outputs.name
 output vnetResourceGroupName string = rgVNET.name
 output subnetAgentResourceId string = virtualNetwork.outputs.subnetResourceIds[0]
+output subnetPrivateEndpointResourceId string = virtualNetwork.outputs.subnetResourceIds[1]
 output subnetPrivateEndpointResourceName string = virtualNetwork.outputs.subnetNames[1]
 output aiServicesPrivateDnsZoneResourceName string = privateDnsZone[4].outputs.name
 output cognitiveServicesPrivateDnsZoneResourceName string = privateDnsZone[1].outputs.name
