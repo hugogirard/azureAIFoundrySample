@@ -330,7 +330,12 @@ body {
 .chat-history-list {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 0 15px 15px 15px;
+    min-height: 0;
+    /* Allow flex item to shrink */
+    height: 0;
+    /* Force flex item to respect parent constraints */
 }
 
 .chat-history-list::-webkit-scrollbar {
@@ -356,6 +361,12 @@ body {
     background-color: white;
     border-right: 1px solid var(--border-color);
     padding: 0;
+    height: calc(100vh - var(--navbar-height));
+    /* Ensure full height */
+    max-height: calc(100vh - var(--navbar-height));
+    /* Enforce max height */
+    overflow: hidden;
+    /* Prevent sidebar overflow */
 }
 
 .chat-history-sidebar {
@@ -363,12 +374,16 @@ body {
     flex-direction: column;
     background-color: #f8f9fa;
     border-radius: 0;
+    height: 100%;
+    /* Take full parent height */
 }
 
 .sidebar-header {
     padding: 20px;
     background: linear-gradient(135deg, var(--primary-color), #4dabf7);
     color: white;
+    flex-shrink: 0;
+    /* Prevent header from shrinking */
 }
 
 .sidebar-header h5 {
@@ -379,7 +394,12 @@ body {
 .chat-history-list-desktop {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 15px;
+    min-height: 0;
+    /* Allow flex item to shrink */
+    height: 0;
+    /* Force flex item to respect parent constraints */
 }
 
 .chat-history-list-desktop::-webkit-scrollbar {
