@@ -604,3 +604,18 @@ body {
     font-size: 14px;
     margin-bottom: 0;
 }
+
+/* New Chat Button Custom Style */
+#newChatBtn,
+#newChatBtnDesktop {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    border: none !important;
+    color: white !important;
+}
+
+#newChatBtn:hover,
+#newChatBtnDesktop:hover {
+    background: linear-gradient(135deg, #059669, #047857) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}

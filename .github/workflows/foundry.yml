@@ -43,3 +43,9 @@ jobs:
           failOnStdErr: false
           parameters: ./infra/foundry/main.bicepparam
 
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: FOUNDRY_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.foundryResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}          
+
