@@ -1,0 +1,14 @@
+[project]
+name = "flight-api"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "aiohttp>=3.12.15",
+    "azure-data-tables>=12.7.0",
+    "azure-identity>=1.23.1",
+    "flask>=3.1.1",
+    "python-dotenv>=1.1.1",
+    "uvicorn>=0.35.0",
+]

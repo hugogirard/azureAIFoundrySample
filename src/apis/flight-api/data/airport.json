@@ -1,0 +1,102 @@
+[
+    {
+        "PartitionKey": "Canada",
+        "RowKey": "YYZ",
+        "AirportName": "Toronto Pearson International Airport"
+    },
+    {
+        "PartitionKey": "Canada",
+        "RowKey": "YVR",
+        "AirportName": "Vancouver International Airport"
+    },
+    {
+        "PartitionKey": "Canada",
+        "RowKey": "YUL",
+        "AirportName": "Montréal–Trudeau International Airport"
+    },
+    {
+        "PartitionKey": "Canada",
+        "RowKey": "YYC",
+        "AirportName": "Calgary International Airport"
+    },
+    {
+        "PartitionKey": "USA",
+        "RowKey": "JFK",
+        "AirportName": "John F. Kennedy International Airport"
+    },
+    {
+        "PartitionKey": "USA",
+        "RowKey": "LAX",
+        "AirportName": "Los Angeles International Airport"
+    },
+    {
+        "PartitionKey": "USA",
+        "RowKey": "ORD",
+        "AirportName": "Chicago O'Hare International Airport"
+    },
+    {
+        "PartitionKey": "USA",
+        "RowKey": "ATL",
+        "AirportName": "Hartsfield–Jackson Atlanta International Airport"
+    },
+    {
+        "PartitionKey": "Mexico",
+        "RowKey": "MEX",
+        "AirportName": "Mexico City International Airport"
+    },
+    {
+        "PartitionKey": "Mexico",
+        "RowKey": "CUN",
+        "AirportName": "Cancún International Airport"
+    },
+    {
+        "PartitionKey": "Mexico",
+        "RowKey": "GDL",
+        "AirportName": "Guadalajara International Airport"
+    },
+    {
+        "PartitionKey": "Mexico",
+        "RowKey": "MTY",
+        "AirportName": "Monterrey International Airport"
+    },
+    {
+        "PartitionKey": "France",
+        "RowKey": "CDG",
+        "AirportName": "Charles de Gaulle Airport"
+    },
+    {
+        "PartitionKey": "France",
+        "RowKey": "ORY",
+        "AirportName": "Orly Airport"
+    },
+    {
+        "PartitionKey": "France",
+        "RowKey": "LYS",
+        "AirportName": "Lyon–Saint-Exupéry Airport"
+    },
+    {
+        "PartitionKey": "France",
+        "RowKey": "NCE",
+        "AirportName": "Nice Côte d'Azur Airport"
+    },
+    {
+        "PartitionKey": "Italy",
+        "RowKey": "FCO",
+        "AirportName": "Leonardo da Vinci–Fiumicino Airport"
+    },
+    {
+        "PartitionKey": "Italy",
+        "RowKey": "MXP",
+        "AirportName": "Milan Malpensa Airport"
+    },
+    {
+        "PartitionKey": "Italy",
+        "RowKey": "VCE",
+        "AirportName": "Venice Marco Polo Airport"
+    },
+    {
+        "PartitionKey": "Italy",
+        "RowKey": "NAP",
+        "AirportName": "Naples International Airport"
+    }
+]
