@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from azure.data.tables.aio import TableClient
 from dependencies import get_table_client_flight, get_logger
+from azure.data.tables import UpdateMode
 from logging import Logger
-from typing import List, Annotated, Dict, Any
+from contract import BookRequest
+from typing import List, Annotated
 from models import Flight
 
 router = APIRouter(prefix="/flight")
@@ -28,3 +30,48 @@ async def get_airport(country: str,
     except Exception as e:
         logger.error(e)
         raise HTTPException(status_code=500, detail='Internal Server Error')
+    
+@router.post("/book",description="Book a flight ticket")
+async def book_flight(book_request:BookRequest,
+                      logger: Annotated[Logger, Depends(get_logger)],
+                      table_client: Annotated[TableClient, Depends(get_table_client_flight)]):
+    try:
+            
+      await update_flight_seat(book_request=book_request,
+                               table_client=table_client,
+                               mode=UpdateMode.REPLACE)
+      
+      return {"message": "Flight booked successfully"}, 202
+    
+    except Exception as e:
+      logger.error(e)
+      raise HTTPException(status_code=500, detail='Internal Server Error')        
+
+@router.delete("/cancel",description="Cancel flight")    
+async def cancel_flight(book_request:BookRequest,
+                        logger: Annotated[Logger, Depends(get_logger)],
+                        table_client: Annotated[TableClient, Depends(get_table_client_flight)]):
+    try:
+      await update_flight_seat(book_request=book_request,
+                               table_client=table_client)
+      return {"message": "Flight cancelled successfully"}, 204    
+    except Exception as e:
+      logger.error(e)
+      raise HTTPException(status_code=500, detail='Internal Server Error')         
+    
+async def update_flight_seat(book_request:BookRequest,
+                             table_client:TableClient,
+                             mode: str = "DELETE"):
+    
+    flight = await table_client.get_entity(partition_key=book_request.country,row_key=book_request.flight_code)
+    seats_available = flight.get('SeatsAvailable', 0)   
+
+    if mode == "UPDATE":
+      if seats_available > 0:
+        flight['SeatsAvailable'] = seats_available - 1
+      else:
+        raise HTTPException(status_code=400, detail='No seats available') 
+    else:
+      flight['SeatsAvailable'] = seats_available + 1
+
+    await table_client.upsert_entity(mode=UpdateMode.REPLACE, entity=flight)
