@@ -6,7 +6,7 @@ from models import Airport
 
 router = APIRouter(prefix="/airport")
 
-@router.get("/")
+@router.get("/",description="Return the list of all the airport")
 async def get_airport(table_client: Annotated[TableClient, Depends(get_table_client_airport)]) -> List[Airport]:
     entities = table_client.query_entities("")
     airports:List[Airport] = []

@@ -11,8 +11,12 @@ class Config:
     
     @property
     def airport_table(self) -> str:
-        return os.getenv("AZURE_STORAGE_AIRPORT_TABLE")
+        return os.getenv('AZURE_STORAGE_AIRPORT_TABLE')
     
+    @property
+    def flight_table(self) -> str:
+        return os.getenv('AZURE_STORAGE_FLIGHT_TABLE')
+
     @property
     def is_development(self) -> bool:
         value = os.getenv('IS_DEVELOPMENT', 'false').lower()

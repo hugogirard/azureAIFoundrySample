@@ -3,23 +3,56 @@
 
 from azure.data.tables import TableServiceClient, TableClient
 from azure.identity import DefaultAzureCredential
+from dotenv import load_dotenv
 from config import Config
 import json
+import os
 
-config = Config()
+def delete_table() -> bool:
+    value = os.getenv('DELETE_TABLE', 'false').lower()
+    return value in ['true', '1', 'yes']       
 
-table_service_client = TableServiceClient.from_connection_string(config.storage_connection_string)
+try:
 
-table_service_client.create_table_if_not_exists(table_name=config.airport_table)
+    load_dotenv(override=True)
 
-table_client = table_service_client.get_table_client(table_name=config.airport_table)
+    config = Config()
 
-# Load JSON file
-with open("data/airport.json", "r") as f:
-    airports = json.load(f)
+    table_service_client = TableServiceClient.from_connection_string(config.storage_connection_string)
 
-# Insert each airport entity into the table
-for airport in airports:
-    table_client.create_entity(entity=airport)
+    try:
+        if delete_table():
+            print(f"Deleting table {config.airport_table}...")
+            table_service_client.delete_table(table_name=config.airport_table)
+            table_service_client.delete_table(table_name=config.flight_table)
+    except Exception as e:
+        print(f"Delete table failed: {e}")    
 
-print(f"Seeded {len(airports)} airports to Azure Table Storage.")
+    table_service_client.create_table_if_not_exists(table_name=config.airport_table)
+    table_service_client.create_table_if_not_exists(table_name=config.flight_table)
+
+    table_client_airport = table_service_client.get_table_client(table_name=config.airport_table)
+    table_client_flight = table_service_client.get_table_client(table_name=config.flight_table)
+
+    # Load JSON file
+    with open("data/airport.json", "r") as f:
+        airports = json.load(f)
+
+    # Insert each airport entity into the table
+    for airport in airports:
+        table_client_airport.create_entity(entity=airport)
+
+    with open("data/flights.json", "r") as f:
+        flights = json.load(f)
+
+    # Insert each airport entity into the table
+    for flight in flights:
+        table_client_flight.create_entity(entity=flight)    
+
+    print(f"Seeded {len(airports)} airports to Azure Table Storage.")
+    print(f"Seeded {len(flights)} flights to Azure Table Storage.")
+
+    exit(0)
+except Exception as e:
+    print(f"Script failed: {e}")
+    exit(1)
