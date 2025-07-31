@@ -9,8 +9,8 @@ config = Config()
 async def lifespan_event(app: FastAPI):
     
     if config.is_development:
-      table_client_airport = TableClient.from_connection_string(config.storage_connection_string,config.airport_table)
-      app.state.table_client_airport = table_client_airport      
+      app.state.table_client_airport = TableClient.from_connection_string(config.storage_connection_string,config.airport_table)
+      app.state.table_client_flight = TableClient.from_connection_string(config.storage_connection_string,config.flight_table)   
     else:
       pass
     
