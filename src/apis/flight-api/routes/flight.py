@@ -63,15 +63,19 @@ async def update_flight_seat(book_request:BookRequest,
                              table_client:TableClient,
                              mode: str = "DELETE"):
     
-    flight = await table_client.get_entity(partition_key=book_request.country,row_key=book_request.flight_code)
-    seats_available = flight.get('SeatsAvailable', 0)   
+    flight = await table_client.get_entity(partition_key=book_request.country, row_key=book_request.flight_code)
+    seats_available = flight.get('SeatsAvailable', 0)
+    max_seat_capacity = flight.get('MaxSeatCapacity', 0)
 
     if mode == "UPDATE":
-      if seats_available > 0:
-        flight['SeatsAvailable'] = seats_available - 1
-      else:
-        raise HTTPException(status_code=400, detail='No seats available') 
+        if seats_available > 0:
+            flight['SeatsAvailable'] = seats_available - 1
+        else:
+            raise HTTPException(status_code=400, detail='No seats available')
     else:
-      flight['SeatsAvailable'] = seats_available + 1
+        if seats_available < max_seat_capacity:
+            flight['SeatsAvailable'] = seats_available + 1
+        else:
+            raise HTTPException(status_code=400, detail='Cannot cancel: seats already at maximum capacity')
 
     await table_client.upsert_entity(mode=UpdateMode.REPLACE, entity=flight)
