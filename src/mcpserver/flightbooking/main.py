@@ -13,14 +13,21 @@ config = Config()
 airport_service = AirportService()
 flight_service = FlightService()
 
-# Add an addition tool
+@mcp.tool(description="Get the list of flights for a specific country")
+async def get_flight_by_country(country:str) -> List[Flight]:
+    """Get the list of flights for a specific country
+       Args:
+        country: country, can be Canada, USA, Mexico and France only.
+    """
+    return await flight_service.get_flight_by_country(country)
+
 @mcp.tool(description="Get the list of flights for airports, origin and destination")
 async def get_airports() -> List[Airport]:
     """Get the list of airports flight available"""
     return await airport_service.get_airports()
 
-@mcp.tool(description="Get the list of flights for airports, origin and destination")
-async def get_flights(country:str, airport_code:str) -> List[Flight]:    
+@mcp.tool(description="Get the list of flights for a specific airport")
+async def get_flights_by_airport(country:str, airport_code:str) -> List[Flight]:    
     """
     Get the list of flights available in a country for a specific airport (airport_code) available"
     Args:
@@ -29,13 +36,25 @@ async def get_flights(country:str, airport_code:str) -> List[Flight]:
     """    
     return await flight_service.get_flight(country,airport_code)
 
-def main():
-   if config.is_development:
-     transport = 'stdio'
-   else:
-     transport = 'streamable-http'
-   
-   mcp.run(transport=transport)
+@mcp.tool(description="Book a flight to a specific country using the flight_code")
+async def book_flight(country:str, flight_code:str) -> None:    
+    """
+    Book a flight to a specific country using the flight_code"
+    Args:
+        country: country, can be Canada, USA, Mexico and France only.
+        flight_code: The flight code to origin and destination, used to book the flight
+    """    
+    return await flight_service.book_flight(country,flight_code)
 
-if __name__ == 'main':
-   main()
+@mcp.tool(description="Cancel a flight to a specific country using the flight_code")
+async def book_flight(country:str, flight_code:str) -> None:    
+    """
+    Cancel a flight to a specific country using the flight_code"
+    Args:
+        country: country, can be Canada, USA, Mexico and France only.
+        flight_code: The flight code to origin and destination, used to book the flight
+    """    
+    return await flight_service.cancel_flight(country,flight_code)
+
+if __name__ == '__main__':
+   mcp.run(transport='streamable-http')

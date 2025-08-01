@@ -23,7 +23,7 @@ class Boostrapper:
         app = FastAPI(lifespan=lifespan_event)
      
         self._configure_monitoring(app)
-
+        
         return app
      
     def _configure_monitoring(self, app: FastAPI):
