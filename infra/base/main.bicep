@@ -33,6 +33,7 @@ var dnsZones = [
   'privatelink.openai.azure.com'
   'privatelink.services.ai.azure.com'
   'privatelink.search.windows.net'
+  'privatelink.azurecr.io'
 ]
 
 resource rgVNET 'Microsoft.Resources/resourceGroups@2025-04-01' = {
@@ -314,6 +315,54 @@ module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' =
   }
 }
 
+module buildAgent 'br/public:avm/res/compute/virtual-machine:0.15.1' = {
+  scope: rgVNET
+  params: {
+    name: 'buildAgent'
+    adminUsername: adminUserName
+    adminPassword: adminPassword
+    disablePasswordAuthentication: false
+    imageReference: {
+      offer: '0001-com-ubuntu-server-jammy'
+      publisher: 'canonical'
+      sku: '22_04-lts-gen2'
+      version: 'latest'
+    }
+    nicConfigurations: [
+      {
+        ipConfigurations: [
+          {
+            name: 'ipconfig01'
+            pipConfiguration: {
+              publicIpNameSuffix: '-pip-01'
+              zones: []
+            }
+            subnetResourceId: virtualNetwork.outputs.subnetResourceIds[2]
+          }
+        ]
+        nicSuffix: '-nic-01'
+      }
+    ]
+    encryptionAtHost: false
+    osDisk: {
+      caching: 'ReadWrite'
+      diskSizeGB: 128
+      managedDisk: {
+        storageAccountType: 'Premium_LRS'
+      }
+    }
+    customData: loadFileAsBase64('agent.yaml')
+    osType: 'Linux'
+    vmSize: 'Standard_D2ls_v5'
+    zone: 0
+    autoShutdownConfig: {
+      dailyRecurrenceTime: '23:59'
+      status: 'Enabled'
+      timeZone: 'UTC'
+    }
+  }
+}
+
 module jumpbox 'br/public:avm/res/compute/virtual-machine:0.15.1' = {
   scope: rgVNET
   params: {
@@ -391,3 +440,4 @@ output privateDnsResourceGroupName string = rgVNET.name
 output aiSearchResourceName string = searchService.outputs.name
 output azureCosmosDBAccountResourceName string = databaseAccount.outputs.name
 output storageAccountResourceName string = storageAccount.outputs.name
+output privateDnsRegistryResourceId string = privateDnsZone[6].outputs.resourceId

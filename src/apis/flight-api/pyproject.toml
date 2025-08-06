@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "aiohttp>=3.12.15",
+    "azure-cosmos>=4.9.0",
     "azure-data-tables>=12.7.0",
     "azure-identity>=1.23.1",
     "fastapi[cli,standard]>=0.116.1",
