@@ -144,3 +144,10 @@ jobs:
           pa_token: ${{ secrets.PA_TOKEN }}
 
 
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: PRIVATE_DNS_REGISTRY_RESOURCE_ID
+          value: ${{ steps.createResources.outputs.privateDnsRegistryResourceId }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+
