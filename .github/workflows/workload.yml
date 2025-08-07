@@ -34,6 +34,8 @@ jobs:
             privateDnsRegistryResourceId: ${{ secrets.PRIVATE_DNS_REGISTRY_RESOURCE_ID }}
             privateEndpointSubnetResourceId: ${{ secrets.SUBNET_PRIVATE_ENDPOINT_ID }}
             workloadResourceGroupName: ${{ secrets.WORKLOAD_RESOURCE_GROUP_NAME }}
+            subnetAcaResourceId: ${{ secrets.SUBNET_ACA_RESOURCE_ID }}
+            vnetResourceGroupName: ${{ secrets.VNET_RESOURCE_GROUP_NAME }}
 
       - name: deploy
         id: createResources

@@ -7,3 +7,7 @@ param privateDnsRegistryResourceId = '__privateDnsRegistryResourceId__'
 param privateEndpointSubnetResourceId = '__privateEndpointSubnetResourceId__'
 
 param workloadResourceGroupName = '__workloadResourceGroupName__'
+
+param subnetAcaResourceId = '__subnetAcaResourceId__'
+
+param vnetResourceGroupName = '__vnetResourceGroupName__'
