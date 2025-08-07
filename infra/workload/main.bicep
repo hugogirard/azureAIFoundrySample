@@ -39,21 +39,11 @@ module registry 'br/public:avm/res/container-registry/registry:0.9.1' = {
 /* Create container app environments 
    will host MCP Server, APIs and Web App
 */
-module environment 'br/public:avm/res/app/managed-environment:0.11.2' = {
+module environment 'modules/environment.bicep' = {
   scope: rgResources
   params: {
-    name: 'aca-${suffix}'
-    infrastructureSubnetResourceId: subnetAcaResourceId
-    internal: true
     location: location
-    publicNetworkAccess: 'Enabled'
-    workloadProfiles: [
-      {
-        maximumCount: 1
-        minimumCount: 1
-        name: 'CAW01'
-        workloadProfileType: 'D4'
-      }
-    ]
+    infrastructureSubnetId: subnetAcaResourceId
+    suffix: suffix
   }
 }
