@@ -44,7 +44,7 @@ module environment 'br/public:avm/res/app/managed-environment:0.11.2' = {
   params: {
     name: 'aca-${suffix}'
     infrastructureSubnetResourceId: subnetAcaResourceId
-    infrastructureResourceGroupName: vnetResourceGroupName
+    internal: true
     location: location
     publicNetworkAccess: 'Enabled'
     workloadProfiles: [
