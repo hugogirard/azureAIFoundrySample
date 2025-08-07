@@ -14,6 +14,8 @@ param subnetJumpboxAddressPrefix string
 
 param apimSubnetAddressPrefix string
 
+param subnetAcaAddressPrefix string
+
 param publisherEmail string
 
 param publisherName string
@@ -183,6 +185,11 @@ module virtualNetwork 'br/public:avm/res/network/virtual-network:0.7.0' = {
         name: 'snet-apim'
         addressPrefix: apimSubnetAddressPrefix
         networkSecurityGroupResourceId: apiNsg.outputs.resourceId
+      }
+      {
+        name: 'snet-aca'
+        addressPrefix: subnetAcaAddressPrefix
+        delegation: 'Microsoft.App/environments'
       }
     ]
   }
@@ -457,3 +464,4 @@ output aiSearchResourceName string = searchService.outputs.name
 output azureCosmosDBAccountResourceName string = databaseAccount.outputs.name
 output storageAccountResourceName string = storageAccount.outputs.name
 output privateDnsRegistryResourceId string = privateDnsZone[6].outputs.resourceId
+output subnetAcaResourceId string = virtualNetwork.outputs.subnetResourceIds[4]

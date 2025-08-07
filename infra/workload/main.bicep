@@ -34,3 +34,7 @@ module registry 'br/public:avm/res/container-registry/registry:0.9.1' = {
     ]
   }
 }
+
+/* Create container app environments 
+   will host MCP Server, APIs and Web App
+*/

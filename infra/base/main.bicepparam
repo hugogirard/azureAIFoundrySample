@@ -23,3 +23,5 @@ param publisherEmail = '__publisherEmail__'
 param publisherName = '__publisherName__'
 
 param apimSubnetAddressPrefix = '__apimSubnetAddressPrefix__'
+
+param subnetAcaAddressPrefix = '__subnetAcaAddressPrefix__'
