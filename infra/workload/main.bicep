@@ -2,7 +2,7 @@ targetScope = 'subscription'
 
 param privateEndpointSubnetResourceId string
 param privateDnsRegistryResourceId string
-param vnetResourceGroupName string
+//param vnetResourceGroupName string
 param workloadResourceGroupName string
 param location string
 

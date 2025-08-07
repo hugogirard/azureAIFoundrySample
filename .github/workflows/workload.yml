@@ -23,6 +23,18 @@ jobs:
       - name: bicep tmp fix
         run: az config set bicep.use_binary_from_path=false
 
+      - uses: cschleiden/replace-tokens@v1
+        name: Update bicepparam
+        with:
+            tokenPrefix: '__'
+            tokenSuffix: '__'            
+            files: '["infra/workload/main.bicepparam"]'
+        env:            
+            location: ${{ secrets.LOCATION }}
+            privateDnsRegistryResourceId: ${{ secrets.PRIVATE_DNS_REGISTRY_RESOURCE_ID }}
+            privateEndpointSubnetResourceId: ${{ secrets.SUBNET_PRIVATE_ENDPOINT_ID }}
+            workloadResourceGroupName: ${{ secrets.WORKLOAD_RESOURCE_GROUP_NAME }}
+
       - name: deploy
         id: createResources
         uses: azure/arm-deploy@v2
@@ -33,4 +45,4 @@ jobs:
           deploymentName: ${{ github.run_id }}
           template: ./infra/workload/main.bicep
           failOnStdErr: false
-          parameters: adminPassword=${{ secrets.VM_PASSWORD }} adminUserName=${{ secrets.VM_ADMIN }}
+          parameters: ./infra/workload/main.bicepparam
