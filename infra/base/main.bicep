@@ -426,6 +426,22 @@ module jumpboxARecord 'create_dns_record.bicep' = [
   }
 ]
 
+// Add the A Record for the build agent
+module buildARecord 'create_dns_record.bicep' = [
+  for name in dnsZones: {
+    scope: rgVNET
+    dependsOn: [
+      privateDnsZone
+    ]
+    params: {
+      recordName: buildAgent.outputs.name
+      #disable-next-line all
+      ipv4Address: buildAgent.outputs.nicConfigurations[0].ipConfigurations[0].privateIP
+      privateDnsZoneName: name
+    }
+  }
+]
+
 output resourceGroupName string = rgResources.name
 output location string = location
 output vnetResourceName string = virtualNetwork.outputs.name
