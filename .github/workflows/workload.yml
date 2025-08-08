@@ -48,3 +48,16 @@ jobs:
           template: ./infra/workload/main.bicep
           failOnStdErr: false
           parameters: ./infra/workload/main.bicepparam
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: ACA_ENVIRONMENT_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.acaEnvironmentResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}          
+
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: ACA_ENVIRONMENT_RESOURCE_ID
+          value: ${{ steps.createResources.outputs.acaResourceId }}
+          pa_token: ${{ secrets.PA_TOKEN }}          

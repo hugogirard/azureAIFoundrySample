@@ -2,6 +2,7 @@ targetScope = 'subscription'
 
 param privateEndpointSubnetResourceId string
 param privateDnsRegistryResourceId string
+param privateDnsStorableTableResourceId string
 param vnetResourceGroupName string
 param subnetAcaResourceId string
 param workloadResourceGroupName string
@@ -47,3 +48,50 @@ module environment 'modules/environment.bicep' = {
     suffix: suffix
   }
 }
+
+/* Storage needed for tables, queues and blob */
+module storageAccount 'br/public:avm/res/storage/storage-account:0.25.0' = {
+  scope: rgResources
+  params: {
+    name: 'str${replace(suffix,'-','')}'
+    location: location
+    kind: 'StorageV2'
+    skuName: 'Standard_LRS'
+    privateEndpoints: [
+      {
+        service: 'table'
+        subnetResourceId: privateEndpointSubnetResourceId
+        privateDnsZoneGroup: {
+          privateDnsZoneGroupConfigs: [
+            {
+              privateDnsZoneResourceId: privateDnsStorableTableResourceId
+            }
+          ]
+        }
+      }
+    ]
+    allowSharedKeyAccess: false
+    publicNetworkAccess: 'Disabled'
+  }
+}
+
+/* Create tables for the flight API */
+module storageTables 'modules/storage-tables.bicep' = {
+  scope: rgResources
+  dependsOn: [storageAccount]
+  params: {
+    storageAccountName: 'str${replace(suffix,'-','')}'
+    tableNames: [
+      'airporttable'
+      'flighttable'
+      'booking'
+    ]
+  }
+}
+
+output acaEnvironmentResourceName string = environment.outputs.acaEnvironmentResourceName
+output acaResourceId string = environment.outputs.acaResourceId
+output storageResourceId string = storageAccount.outputs.resourceId
+output airportTableName string = storageTables.outputs.tableNames[0]
+output flightTableName string = storageTables.outputs.tableNames[1]
+output bookingTableName string = storageTables.outputs.tableNames[2]

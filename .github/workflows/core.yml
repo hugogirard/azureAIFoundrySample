@@ -157,4 +157,8 @@ jobs:
           value: ${{ steps.createResources.outputs.subnetAcaResourceId }}
           pa_token: ${{ secrets.PA_TOKEN }}
 
-
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: TABLE_STORAGE_PRIVATE_DNS_ZONE_RESOURCE_ID
+          value: ${{ steps.createResources.outputs.tableStoragePrivateDnsZoneResourceId }}
+          pa_token: ${{ secrets.PA_TOKEN }}

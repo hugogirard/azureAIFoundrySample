@@ -22,3 +22,6 @@ resource environment 'Microsoft.App/managedEnvironments@2025-02-02-preview' = {
     zoneRedundant: false
   }
 }
+
+output acaEnvironmentResourceName string = environment.name
+output acaResourceId string = environment.id

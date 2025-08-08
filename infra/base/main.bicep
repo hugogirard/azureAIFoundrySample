@@ -36,6 +36,7 @@ var dnsZones = [
   'privatelink.services.ai.azure.com'
   'privatelink.search.windows.net'
   'privatelink.azurecr.io'
+  'privatelink.table.${environment().suffixes.storage}'
 ]
 
 resource rgVNET 'Microsoft.Resources/resourceGroups@2025-04-01' = {
@@ -358,7 +359,6 @@ module buildAgent 'br/public:avm/res/compute/virtual-machine:0.15.1' = {
         storageAccountType: 'Premium_LRS'
       }
     }
-    customData: loadFileAsBase64('agent.yaml')
     osType: 'Linux'
     vmSize: 'Standard_D2ls_v5'
     zone: 0
@@ -465,3 +465,4 @@ output azureCosmosDBAccountResourceName string = databaseAccount.outputs.name
 output storageAccountResourceName string = storageAccount.outputs.name
 output privateDnsRegistryResourceId string = privateDnsZone[6].outputs.resourceId
 output subnetAcaResourceId string = virtualNetwork.outputs.subnetResourceIds[4]
+output tableStoragePrivateDnsZoneResourceId string = privateDnsZone[7].outputs.resourceId
