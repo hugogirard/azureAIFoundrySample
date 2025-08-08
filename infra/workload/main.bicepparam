@@ -11,3 +11,5 @@ param workloadResourceGroupName = '__workloadResourceGroupName__'
 param subnetAcaResourceId = '__subnetAcaResourceId__'
 
 param vnetResourceGroupName = '__vnetResourceGroupName__'
+
+param privateDnsStorableTableResourceId = '__privateDnsStorableTableResourceId__'
