@@ -2,7 +2,12 @@ name: Create Infra Workload
 
 on:
   workflow_dispatch:
-
+    inputs:
+      lockdown:
+        description: 'if resource should be locked down to private traffic only (true mean lockdown)'
+        required: true
+        default: false
+        type: boolean
 jobs:
   create-azure-resources:
     env:
@@ -48,7 +53,7 @@ jobs:
           deploymentName: ${{ github.run_id }}
           template: ./infra/workload/main.bicep
           failOnStdErr: false
-          parameters: ./infra/workload/main.bicepparam
+          parameters: ./infra/workload/main.bicepparam lockdown=${{inputs.lockdown}}
 
       - uses: gliech/create-github-secret-action@v1
         with:

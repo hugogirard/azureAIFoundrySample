@@ -101,8 +101,26 @@ module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' =
     automaticFailover: false
     networkRestrictions: {
       networkAclBypass: 'AzureServices'
-      publicNetworkAccess: 'Disabled'
+      publicNetworkAccess: publicNetworkAccess
     }
+    sqlDatabases: [
+      {
+        name: 'flight'
+        throughput: 600
+        autoscaleSettingsMaxThroughput: 4000
+        containers: [
+          {
+            indexingPolicy: {
+              automatic: true
+            }
+            name: 'bookings'
+            paths: [
+              '/username'
+            ]
+          }
+        ]
+      }
+    ]
     failoverLocations: [
       {
         failoverPriority: 0
@@ -130,6 +148,8 @@ module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' =
 output acaEnvironmentResourceName string = environment.outputs.acaEnvironmentResourceName
 output acaResourceId string = environment.outputs.acaResourceId
 output storageResourceId string = storageAccount.outputs.resourceId
+output storageAccountName string = storageAccount.outputs.name
 output airportTableName string = storageTables.outputs.tableNames[0]
 output flightTableName string = storageTables.outputs.tableNames[1]
 output bookingTableName string = storageTables.outputs.tableNames[2]
+output cosmosDbName string = databaseAccount.outputs.name
