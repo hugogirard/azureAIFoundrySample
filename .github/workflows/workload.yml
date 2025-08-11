@@ -42,6 +42,7 @@ jobs:
             subnetAcaResourceId: ${{ secrets.SUBNET_ACA_RESOURCE_ID }}
             vnetResourceGroupName: ${{ secrets.VNET_RESOURCE_GROUP_NAME }}
             privateDnsStorableTableResourceId: ${{ secrets.TABLE_STORAGE_PRIVATE_DNS_ZONE_RESOURCE_ID }}
+            privateDnsCosmosDBResourceId: ${{ secrets.COSMOSDB_PRIVATE_DNS_ZONE_RESOURCE_ID }}
 
       - name: deploy
         id: createResources
