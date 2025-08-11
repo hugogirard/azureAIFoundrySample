@@ -16,7 +16,10 @@ async def lifespan_event(app: FastAPI):
 
       # Create cosmosdb repository
       credential = DefaultAzureCredential()
-      cosmos_client = Cos
+      cosmos_client = CosmosClient(url=config.cosmos_endpoint,
+                                   credential=credential)
+      
+      app.state.container = cosmos_client.get_database_client('').get_container_client('')
 
     else:
       pass

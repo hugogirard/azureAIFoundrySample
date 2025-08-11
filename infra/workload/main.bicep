@@ -26,6 +26,7 @@ module registry 'br/public:avm/res/container-registry/registry:0.9.1' = {
     location: location
     acrSku: 'Premium'
     publicNetworkAccess: publicNetworkAccess
+    exportPolicyStatus: lockdown ? 'enabled' : 'disabled'
     privateEndpoints: [
       {
         privateDnsZoneGroup: {
@@ -53,6 +54,15 @@ module environment 'modules/environment.bicep' = {
   }
 }
 
+var networkAcls = lockdown
+  ? {
+      defaultAction: 'Deny'
+      bypass: 'AzureServices'
+    }
+  : {
+      defaultAction: 'Allow'
+    }
+
 /* Storage needed for tables, queues and blob */
 module storageAccount 'br/public:avm/res/storage/storage-account:0.25.0' = {
   scope: rgResources
@@ -76,6 +86,7 @@ module storageAccount 'br/public:avm/res/storage/storage-account:0.25.0' = {
     ]
     allowSharedKeyAccess: false
     publicNetworkAccess: publicNetworkAccess
+    networkAcls: networkAcls
   }
 }
 

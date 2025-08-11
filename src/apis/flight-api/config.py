@@ -29,3 +29,7 @@ class Config:
     @property
     def storage_connection_string(self) -> str:
         return os.getenv('AZURE_STORAGE_CONNECTION_STRING')
+
+    @property
+    def cosmos_endpoint(self) -> str:
+        return os.getenv('AZURE_COSMOSDB_ENDPOINT')
