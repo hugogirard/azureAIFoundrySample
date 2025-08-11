@@ -13,3 +13,5 @@ param openAiDnsZoneName = '__openAiDnsZoneName__'
 param privateDNSResourceGroupName = '__privateDNSResourceGroupName__'
 
 param subnetPrivateEndpointResourceId = '__subnetPrivateEndpointResourceId__'
+
+param lockdown = false

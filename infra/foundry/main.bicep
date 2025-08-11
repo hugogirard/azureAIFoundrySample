@@ -5,6 +5,7 @@ param openAiDnsZoneName string
 param privateDNSResourceGroupName string
 param cognitiveServicesDnsZoneName string
 param aiServiceDnsZoneName string
+param lockdown bool
 
 var suffix = uniqueString(resourceGroup().id)
 
@@ -30,7 +31,7 @@ resource account 'Microsoft.CognitiveServices/accounts@2025-04-01-preview' = {
       virtualNetworkRules: []
       ipRules: []
     }
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: lockdown ? 'Disabled' : 'Enabled'
     networkInjections: ((networkInjection == 'true')
       ? [
           {

@@ -3,10 +3,14 @@ targetScope = 'subscription'
 param privateEndpointSubnetResourceId string
 param privateDnsRegistryResourceId string
 param privateDnsStorableTableResourceId string
+param privateDnsCosmosDBResourceId string
 param vnetResourceGroupName string
 param subnetAcaResourceId string
 param workloadResourceGroupName string
 param location string
+param lockdown bool
+
+var publicNetworkAccess = lockdown ? 'Disabled' : 'Enabled'
 
 resource rgResources 'Microsoft.Resources/resourceGroups@2025-04-01' = {
   name: workloadResourceGroupName
@@ -21,7 +25,7 @@ module registry 'br/public:avm/res/container-registry/registry:0.9.1' = {
     name: 'acr${suffix}'
     location: location
     acrSku: 'Premium'
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: publicNetworkAccess
     privateEndpoints: [
       {
         privateDnsZoneGroup: {
@@ -71,7 +75,7 @@ module storageAccount 'br/public:avm/res/storage/storage-account:0.25.0' = {
       }
     ]
     allowSharedKeyAccess: false
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: publicNetworkAccess
   }
 }
 
@@ -84,7 +88,41 @@ module storageTables 'modules/storage-tables.bicep' = {
     tableNames: [
       'airporttable'
       'flighttable'
-      'booking'
+    ]
+  }
+}
+
+module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' = {
+  scope: rgResources
+  params: {
+    name: 'cosmos-${suffix}'
+    location: location
+    disableLocalAuthentication: true
+    automaticFailover: false
+    networkRestrictions: {
+      networkAclBypass: 'AzureServices'
+      publicNetworkAccess: 'Disabled'
+    }
+    failoverLocations: [
+      {
+        failoverPriority: 0
+        isZoneRedundant: false
+        locationName: location
+      }
+    ]
+    zoneRedundant: false
+    privateEndpoints: [
+      {
+        service: 'sql'
+        subnetResourceId: privateEndpointSubnetResourceId
+        privateDnsZoneGroup: {
+          privateDnsZoneGroupConfigs: [
+            {
+              privateDnsZoneResourceId: privateDnsCosmosDBResourceId
+            }
+          ]
+        }
+      }
     ]
   }
 }

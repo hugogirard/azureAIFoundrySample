@@ -233,9 +233,9 @@ module apim 'br/public:avm/res/api-management/service:0.9.1' = {
     // Non-required parameters
     enableDeveloperPortal: true
     sku: 'Developer'
-    virtualNetworkType: 'External'
+    virtualNetworkType: 'External' // Here for simplicity we use External mode but it should be
+    // with a WAF in front and internal mode
     subnetResourceId: virtualNetwork.outputs.subnetResourceIds[3]
-    //publicIpAddressResourceId: pip.outputs.resourceId
   }
 }
 
@@ -259,6 +259,8 @@ module searchService 'br/public:avm/res/search/search-service:0.10.0' = {
         subnetResourceId: virtualNetwork.outputs.subnetResourceIds[1]
       }
     ]
+    // Here since it's an agent dependencies no needs to expose it 
+    // publicaly, for debugging we use the jumpbox
     publicNetworkAccess: 'Disabled'
   }
 }
@@ -284,6 +286,8 @@ module storageAccount 'br/public:avm/res/storage/storage-account:0.25.0' = {
       }
     ]
     allowSharedKeyAccess: false
+    // Here since it's an agent dependencies no needs to expose it 
+    // publicaly, for debugging we use the jumpbox    
     publicNetworkAccess: 'Disabled'
   }
 }
@@ -297,6 +301,8 @@ module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' =
     automaticFailover: false
     networkRestrictions: {
       networkAclBypass: 'AzureServices'
+      // Here since it's an agent dependencies no needs to expose it 
+      // publicaly, for debugging we use the jumpbox      
       publicNetworkAccess: 'Disabled'
     }
     failoverLocations: [
@@ -465,4 +471,5 @@ output azureCosmosDBAccountResourceName string = databaseAccount.outputs.name
 output storageAccountResourceName string = storageAccount.outputs.name
 output privateDnsRegistryResourceId string = privateDnsZone[6].outputs.resourceId
 output subnetAcaResourceId string = virtualNetwork.outputs.subnetResourceIds[4]
+output cosmosDBPrivateDnsZoneResourceId string = privateDnsZone[2].outputs.resourceId
 output tableStoragePrivateDnsZoneResourceId string = privateDnsZone[7].outputs.resourceId

@@ -162,3 +162,10 @@ jobs:
           name: TABLE_STORAGE_PRIVATE_DNS_ZONE_RESOURCE_ID
           value: ${{ steps.createResources.outputs.tableStoragePrivateDnsZoneResourceId }}
           pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: COSMOSDB_PRIVATE_DNS_ZONE_RESOURCE_ID
+          value: ${{ steps.createResources.outputs.cosmosDBPrivateDnsZoneResourceId }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+          
