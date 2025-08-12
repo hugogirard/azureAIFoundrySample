@@ -164,5 +164,4 @@ output storageTableEndpoint string = 'https://${storageAccount.outputs.name}.tab
 output cosmosDbEndpoint string = 'https://${databaseAccount.outputs.name}.documents.azure.com:443/'
 output airportTableName string = storageTables.outputs.tableNames[0]
 output flightTableName string = storageTables.outputs.tableNames[1]
-output bookingTableName string = storageTables.outputs.tableNames[2]
 output cosmosDbName string = databaseAccount.outputs.name
