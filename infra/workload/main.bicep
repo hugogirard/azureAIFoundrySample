@@ -26,7 +26,7 @@ module registry 'br/public:avm/res/container-registry/registry:0.9.1' = {
     location: location
     acrSku: 'Premium'
     publicNetworkAccess: publicNetworkAccess
-    exportPolicyStatus: lockdown ? 'enabled' : 'disabled'
+    exportPolicyStatus: null
     privateEndpoints: [
       {
         privateDnsZoneGroup: {
