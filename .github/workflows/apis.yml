@@ -2,7 +2,12 @@ name: Build and Deploy Flight API
 
 on:
   workflow_dispatch:
-
+    inputs:
+      seed:
+        description: 'Seed the airport and flight table'
+        required: true
+        default: true
+        type: boolean
 env:
   REGISTRY_NAME: your-acr-name  # Replace with your ACR name
   IMAGE_NAME: flight-api
@@ -11,6 +16,7 @@ env:
 jobs:
   seed-tables:
     runs-on: ubuntu-latest
+    if: ${{ inputs.seed == true }}
     
     steps:
     - name: Checkout code

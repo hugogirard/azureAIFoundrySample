@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from config import Config
 import json
 import os
+import time
 
 def delete_table() -> bool:
     value = os.getenv('DELETE_TABLE', 'false').lower()
@@ -24,6 +25,7 @@ try:
             print(f"Deleting table {config.airport_table}...")
             table_service_client.delete_table(table_name=config.airport_table)
             table_service_client.delete_table(table_name=config.flight_table)
+            time.sleep(10)
     except Exception as e:
         print(f"Delete table failed: {e}")    
 
