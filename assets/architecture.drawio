@@ -1,11 +1,20 @@
 <mxfile host="65bd71144e">
     <diagram id="5RO6jewiYaIS6_P7T4ua" name="Page-1">
-        <mxGraphModel dx="1171" dy="779" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" background="light-dark(#FFFFFF,#FFFFFF)" math="0" shadow="0">
+        <mxGraphModel dx="1529" dy="779" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" background="light-dark(#FFFFFF,#FFFFFF)" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#000000);" vertex="1" parent="1">
-                    <mxGeometry x="147" y="144" width="120" height="60" as="geometry"/>
+                <mxCell id="2" value="rg-vnet-agent" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#FFFFFF,#F7F7F7);strokeColor=light-dark(#000000,#000000);fontColor=light-dark(#000000,#000000);labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="-50" y="212" width="315" height="301" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/ResourceGroup.svg;" vertex="1" parent="1">
+                    <mxGeometry x="-45" y="197" width="37.5" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;dashed=1;strokeColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+                    <mxGeometry x="-18.5" y="270" width="252" height="174" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+                    <mxGeometry x="286" y="413" width="120" height="60" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
