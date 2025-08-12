@@ -17,9 +17,8 @@ try:
     load_dotenv(override=True)
 
     config = Config()
-
-    table_service_client = TableServiceClient.from_connection_string(config.storage_connection_string)
-
+    table_service_client = TableServiceClient(endpoint=config.storage_endpoint,credential=DefaultAzureCredential())
+    
     try:
         if delete_table():
             print(f"Deleting table {config.airport_table}...")

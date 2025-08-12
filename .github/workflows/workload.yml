@@ -68,3 +68,15 @@ jobs:
           name: ACA_ENVIRONMENT_RESOURCE_ID
           value: ${{ steps.createResources.outputs.acaResourceId }}
           pa_token: ${{ secrets.PA_TOKEN }}          
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: STORAGE_TABLE_ENDPOINT
+          value: ${{ steps.createResources.outputs.storageTableEndpoint }}
+          pa_token: ${{ secrets.PA_TOKEN }}  
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: COSMOS_DB_ENDPOINT
+          value: ${{ steps.createResources.outputs.cosmosDbEndpoint }}
+          pa_token: ${{ secrets.PA_TOKEN }}
