@@ -1,7 +1,8 @@
 from contextlib import asynccontextmanager
-from azure.data.tables.aio import TableClient
+from azure.data.tables.aio import TableClient, TableServiceClient
 from azure.identity.aio import DefaultAzureCredential
 from azure.cosmos.aio import CosmosClient
+from repository.flight_repository import FlightRepository
 from fastapi import FastAPI
 from config import Config
 
@@ -10,20 +11,19 @@ config = Config()
 @asynccontextmanager
 async def lifespan_event(app: FastAPI):
     
-    if config.is_development:
-      app.state.table_client_airport = TableClient.from_connection_string(config.storage_connection_string,config.airport_table)
-      app.state.table_client_flight = TableClient.from_connection_string(config.storage_connection_string,config.flight_table)   
+    table_service_client = TableServiceClient(endpoint=config.storage_endpoint,credential=DefaultAzureCredential())
+    app.state.table_client_airport = table_service_client.get_table_client(table_name=config.airport_table)
+    app.state.table_client_flight = table_service_client.get_table_client(table_name=config.flight_table)
 
-      # Create cosmosdb repository
-      credential = DefaultAzureCredential()
-      cosmos_client = CosmosClient(url=config.cosmos_endpoint,
-                                   credential=credential)
-      
-      app.state.container = cosmos_client.get_database_client('').get_container_client('')
-
-    else:
-      pass
+    # Create cosmosdb repository
+    credential = DefaultAzureCredential()
+    cosmos_client = CosmosClient(url=config.cosmos_endpoint,
+                                 credential=credential)
     
+    container = cosmos_client.get_database_client(config.cosmos_database).get_container_client(config.cosmos_container)
+
+    app.state.repository = FlightRepository(container)
+
     yield
 
 class Boostrapper:

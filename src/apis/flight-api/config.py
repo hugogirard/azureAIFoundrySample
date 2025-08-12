@@ -33,3 +33,15 @@ class Config:
     @property
     def cosmos_endpoint(self) -> str:
         return os.getenv('AZURE_COSMOSDB_ENDPOINT')
+    
+    @property
+    def cosmos_database(self) -> str:
+        return os.getenv('COSMOS_DATABASE')
+    
+    @property
+    def cosmos_container(self) -> str:
+        return os.getenv('COSMOS_CONTAINER')
+    
+    @property
+    def user_principal_name(self) -> str:
+        return os.getenv('USER_PRINCIPAL_NAME')

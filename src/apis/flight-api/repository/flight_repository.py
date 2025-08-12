@@ -32,3 +32,12 @@ class FlightRepository:
             booking = FlightInfo.model_validate(item)
             bookings.append(booking)
         return bookings             
+    
+    async def get_booking(self, id:str, user_name:str) -> FlightInfo:
+        query = "SELECT * FROM c where c.id = @id AND c.username = @username"
+        async for item in self.container.query_items(query=query,
+                                                     parameters=[{"name": "@username", "value": str(user_name)},
+                                                                 {"id": "@id", "value": id}]):
+            return FlightInfo.model_validate(item)
+        
+        return None

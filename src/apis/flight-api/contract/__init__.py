@@ -1,1 +1,3 @@
 from .book_request import BookRequest
+from .flight_info_request import FlightInfoRequest
+from .booking_info_request import BookingInfoRequest
