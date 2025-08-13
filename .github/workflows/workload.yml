@@ -39,8 +39,7 @@ jobs:
             privateDnsRegistryResourceId: ${{ secrets.PRIVATE_DNS_REGISTRY_RESOURCE_ID }}
             privateEndpointSubnetResourceId: ${{ secrets.SUBNET_PRIVATE_ENDPOINT_ID }}
             workloadResourceGroupName: ${{ secrets.WORKLOAD_RESOURCE_GROUP_NAME }}
-            subnetAcaResourceId: ${{ secrets.SUBNET_ACA_RESOURCE_ID }}
-            userObjectId: ${{ secrets.USER_OBJECT_ID }}
+            subnetAcaResourceId: ${{ secrets.SUBNET_ACA_RESOURCE_ID }}            
             privateDnsStorableTableResourceId: ${{ secrets.TABLE_STORAGE_PRIVATE_DNS_ZONE_RESOURCE_ID }}
             privateDnsCosmosDBResourceId: ${{ secrets.COSMOSDB_PRIVATE_DNS_ZONE_RESOURCE_ID }}
 
@@ -54,7 +53,7 @@ jobs:
           deploymentName: ${{ github.run_id }}
           template: ./infra/workload/main.bicep
           failOnStdErr: false
-          parameters: ./infra/workload/main.bicepparam lockdown=${{inputs.lockdown}}
+          parameters: ./infra/workload/main.bicepparam lockdown=${{inputs.lockdown}} userObjectId=${{ secrets.USER_OBJECT_ID }}
 
       - uses: gliech/create-github-secret-action@v1
         with:
