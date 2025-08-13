@@ -103,6 +103,22 @@ module storageTables 'modules/storage-tables.bicep' = {
   }
 }
 
+var privateEndpointCosmosDB = lockdown
+  ? [
+      {
+        service: 'sql'
+        subnetResourceId: privateEndpointSubnetResourceId
+        privateDnsZoneGroup: {
+          privateDnsZoneGroupConfigs: [
+            {
+              privateDnsZoneResourceId: privateDnsCosmosDBResourceId
+            }
+          ]
+        }
+      }
+    ]
+  : null
+
 module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' = {
   scope: rgResources
   params: {
@@ -140,23 +156,11 @@ module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' =
       }
     ]
     zoneRedundant: false
-    privateEndpoints: [
-      {
-        service: 'sql'
-        subnetResourceId: privateEndpointSubnetResourceId
-        privateDnsZoneGroup: {
-          privateDnsZoneGroupConfigs: [
-            {
-              privateDnsZoneResourceId: privateDnsCosmosDBResourceId
-            }
-          ]
-        }
-      }
-    ]
+    privateEndpoints: privateEndpointCosmosDB
   }
 }
 
-module rbac_user 'modules/user.rbac.bicep' = if (!empty(userObjectId)) {
+module rbac_user 'modules/user.rbac.bicep' = if (userObjectId != '' && userObjectId != null) {
   scope: rgResources
   params: {
     cosmosDbResourceName: databaseAccount.outputs.name
