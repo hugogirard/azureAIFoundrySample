@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from azure.data.tables.aio import TableClient
 from dependencies import get_table_client_flight, get_logger, get_booking_repository, get_easy_auth_token
 from repository.flight_repository import FlightRepository
 from azure.data.tables import UpdateMode
 from logging import Logger
-from contract import BookRequest, FlightInfoRequest
+from contract import BookRequest, FlightInfoRequest, BookingInfoRequest
 from typing import List, Annotated
 from models import Flight
 
@@ -53,10 +53,11 @@ async def flight_by_airport(country: str,
     
 @router.post("/book",description="Book a flight ticket")
 async def book_flight(book_request:BookRequest,
+                      response: Response,
                       logger: Annotated[Logger, Depends(get_logger)],
                       table_client: Annotated[TableClient, Depends(get_table_client_flight)],
                       repository: Annotated[FlightRepository, Depends(get_booking_repository)],
-                      user_principal_name: Annotated[str,Depends(get_easy_auth_token)]) -> FlightInfoRequest:
+                      user_principal_name: Annotated[str,Depends(get_easy_auth_token)]) -> BookingInfoRequest:
     try:
             
       await update_flight_seat(book_request=book_request,
@@ -64,8 +65,8 @@ async def book_flight(book_request:BookRequest,
                                mode="UPDATE")
           
       flight_info = await repository.book_flight(book_request.country,book_request.flight_code,user_principal_name)
-
-      return FlightInfoRequest(flight_info.id, book_request.country,book_request.flight_code), 202
+      response.status_code = 202
+      return BookingInfoRequest(bookingId=flight_info.id, country=book_request.country,flightCode=book_request.flight_code)
     
     except Exception as e:
       logger.error(e)

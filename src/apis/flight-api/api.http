@@ -56,24 +56,18 @@ X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
 
 ###
 
-### 8. Book another flight (different example)
-POST {{baseUrl}}/api/flight/book?user_principal_name={{userPrincipalName}}
-Content-Type: application/json
-X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
-
-{
-  "country": "Canada",
-  "flightCode": "AC202"
-}
-
-###
-
 ### 9. Get booking info by booking ID (replace with actual booking ID from previous booking)
-GET {{baseUrl}}/api/booking/BOOKING123?user_principal_name={{userPrincipalName}}
+GET {{baseUrl}}/api/booking/16ac3e2b-5c48-4fbd-9ebe-1cbb8d7d0c59
 Content-Type: application/json
 X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
 
 ###
+
+### 10. Get all flight for specific user
+GET {{baseUrl}}/api/booking/all
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
 
 ### 10. Cancel a flight booking
 DELETE {{baseUrl}}/api/flight/cancel
@@ -95,51 +89,3 @@ X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
 
 ###
 
-### 11. Error case - Invalid country
-GET {{baseUrl}}/api/flight/country/InvalidCountry
-Content-Type: application/json
-X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
-
-###
-
-### 12. Error case - Invalid airport code
-GET {{baseUrl}}/api/flight/USA/INVALID
-Content-Type: application/json
-X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
-
-###
-
-### 13. Error case - Missing required fields in booking
-POST {{baseUrl}}/api/flight/book?user_principal_name={{userPrincipalName}}
-Content-Type: application/json
-X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
-
-{
-  "country": "USA"
-}
-
-###
-
-### 14. Error case - Invalid booking ID
-GET {{baseUrl}}/api/booking/INVALID_ID?user_principal_name={{userPrincipalName}}
-Content-Type: application/json
-X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
-
-###
-
-### 15. Error case - Cancel flight with missing fields
-DELETE {{baseUrl}}/api/flight/cancel
-Content-Type: application/json
-X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
-
-{
-  "bookingId": "BOOKING123"
-}
-
-###
-
-### 16. Error case - Missing authentication header
-GET {{baseUrl}}/api/airport/
-Content-Type: application/json
-
-###

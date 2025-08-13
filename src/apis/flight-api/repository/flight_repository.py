@@ -12,7 +12,7 @@ class FlightRepository:
         flight_info = FlightInfo(
             id=guid,
             country=country,
-            flight_code=flight_code,
+            flightCode=flight_code,
             username=username
         ) 
         await self.container.create_item(flight_info.model_dump(by_alias=True))
@@ -37,7 +37,7 @@ class FlightRepository:
         query = "SELECT * FROM c where c.id = @id AND c.username = @username"
         async for item in self.container.query_items(query=query,
                                                      parameters=[{"name": "@username", "value": str(user_name)},
-                                                                 {"id": "@id", "value": id}]):
+                                                                 {"name": "@id", "value": id}]):
             return FlightInfo.model_validate(item)
         
-        return None
+        return None    
