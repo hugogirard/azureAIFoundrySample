@@ -10,10 +10,10 @@ class FlightRepository:
     async def book_flight(self,country:str,flight_code:str,username:str) -> FlightInfo:
         guid = str(uuid.uuid4())
         flight_info = FlightInfo(
-            guid,
-            country,
-            flight_code,
-            username
+            id=guid,
+            country=country,
+            flight_code=flight_code,
+            username=username
         ) 
         await self.container.create_item(flight_info.model_dump(by_alias=True))
         return flight_info        

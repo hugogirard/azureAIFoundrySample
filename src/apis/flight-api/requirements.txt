@@ -19,8 +19,11 @@ attrs==25.3.0
     # via aiohttp
 azure-core==1.35.0
     # via
+    #   azure-cosmos
     #   azure-data-tables
     #   azure-identity
+azure-cosmos==4.9.0
+    # via flight-api (pyproject.toml)
 azure-data-tables==12.7.0
     # via flight-api (pyproject.toml)
 azure-identity==1.23.1
@@ -159,6 +162,7 @@ typing-extensions==4.14.1
     #   aiosignal
     #   anyio
     #   azure-core
+    #   azure-cosmos
     #   azure-data-tables
     #   azure-identity
     #   exceptiongroup

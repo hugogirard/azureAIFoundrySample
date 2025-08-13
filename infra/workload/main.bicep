@@ -4,7 +4,7 @@ param privateEndpointSubnetResourceId string
 param privateDnsRegistryResourceId string
 param privateDnsStorableTableResourceId string
 param privateDnsCosmosDBResourceId string
-param vnetResourceGroupName string
+param userObjectId string
 param subnetAcaResourceId string
 param workloadResourceGroupName string
 param location string
@@ -153,6 +153,14 @@ module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' =
         }
       }
     ]
+  }
+}
+
+module rbac_user 'modules/user.rbac.bicep' = if (!empty(userObjectId)) {
+  scope: rgResources
+  params: {
+    cosmosDbResourceName: databaseAccount.outputs.name
+    userObjectId: userObjectId
   }
 }
 

@@ -14,7 +14,7 @@ router = APIRouter(prefix="/flight")
 @router.get('/country/{country}')
 async def flight_by_country(country:str,
                             logger: Annotated[Logger, Depends(get_logger)],
-                            table_client: Annotated[TableClient, Depends(get_table_client_flight)]]) -> List[Flight]:
+                            table_client: Annotated[TableClient, Depends(get_table_client_flight)]) -> List[Flight]:
     try:
         parameters = {"country": country}
         filter = "PartitionKey eq @country"
@@ -56,12 +56,12 @@ async def book_flight(book_request:BookRequest,
                       logger: Annotated[Logger, Depends(get_logger)],
                       table_client: Annotated[TableClient, Depends(get_table_client_flight)],
                       repository: Annotated[FlightRepository, Depends(get_booking_repository)],
-                      user_principal_name: Annotated[str,get_easy_auth_token]) -> FlightInfoRequest:
+                      user_principal_name: Annotated[str,Depends(get_easy_auth_token)]) -> FlightInfoRequest:
     try:
             
       await update_flight_seat(book_request=book_request,
                                table_client=table_client,
-                               mode=UpdateMode.REPLACE)
+                               mode="UPDATE")
           
       flight_info = await repository.book_flight(book_request.country,book_request.flight_code,user_principal_name)
 
@@ -94,7 +94,7 @@ async def update_flight_seat(book_request:BookRequest,
     flight = await table_client.get_entity(partition_key=book_request.country, row_key=book_request.flight_code)
     seats_available = flight.get('SeatsAvailable', 0)
     max_seat_capacity = flight.get('MaxSeatCapacity', 0)
-
+    
     if mode == "UPDATE":
         if seats_available > 0:
             flight['SeatsAvailable'] = seats_available - 1

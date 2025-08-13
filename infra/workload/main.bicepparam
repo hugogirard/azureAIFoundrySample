@@ -10,10 +10,10 @@ param workloadResourceGroupName = '__workloadResourceGroupName__'
 
 param subnetAcaResourceId = '__subnetAcaResourceId__'
 
-param vnetResourceGroupName = '__vnetResourceGroupName__'
-
 param privateDnsStorableTableResourceId = '__privateDnsStorableTableResourceId__'
 
 param lockdown = false
 
 param privateDnsCosmosDBResourceId = '__privateDnsCosmosDBResourceId__'
+
+param userObjectId = ''

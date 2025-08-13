@@ -14,7 +14,7 @@ async def get_booking_info(booking_id:str,
                            logger: Annotated[Logger, Depends(get_logger)],
                            repository: Annotated[FlightRepository, Depends(get_booking_repository)],
                            table_client: Annotated[TableClient, Depends(get_table_client_flight)],
-                           user_principal_name: Annotated[str,get_easy_auth_token]) -> FlightInfoRequest:
+                           user_principal_name: Annotated[str,Depends(get_easy_auth_token)]) -> FlightInfoRequest:
     try:
         flight_info = await repository.get_booking(booking_id,user_principal_name)
 

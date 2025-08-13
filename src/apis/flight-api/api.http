@@ -1,0 +1,145 @@
+### Variables
+@baseUrl = http://localhost:8000
+@userPrincipalName = test@example.com
+
+### 1. Get all airports
+GET {{baseUrl}}/api/airport/
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+###
+
+### 2. Get flights by country (example with USA)
+GET {{baseUrl}}/api/flight/country/USA
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+###
+
+### 3. Get flights by country (example with Canada)
+GET {{baseUrl}}/api/flight/country/Canada
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+###
+
+### 4. Get flights by airport (example: USA/LAX)
+GET {{baseUrl}}/api/flight/USA/LAX
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+###
+
+### 5. Get flights by airport (example: USA/JFK)
+GET {{baseUrl}}/api/flight/USA/JFK
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+###
+
+### 6. Get flights by airport (example: Canada/YYZ)
+GET {{baseUrl}}/api/flight/Canada/YYZ
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+###
+
+### 7. Book a flight (example booking)
+POST {{baseUrl}}/api/flight/book
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+{
+  "country": "USA",
+  "flightCode": "Delta008"
+}
+
+###
+
+### 8. Book another flight (different example)
+POST {{baseUrl}}/api/flight/book?user_principal_name={{userPrincipalName}}
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+{
+  "country": "Canada",
+  "flightCode": "AC202"
+}
+
+###
+
+### 9. Get booking info by booking ID (replace with actual booking ID from previous booking)
+GET {{baseUrl}}/api/booking/BOOKING123?user_principal_name={{userPrincipalName}}
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+###
+
+### 10. Cancel a flight booking
+DELETE {{baseUrl}}/api/flight/cancel
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+{
+  "bookingId": "BOOKING123",
+  "country": "USA",
+  "flightCode": "AA101",
+  "airline": "American Airlines",
+  "from_airport": "LAX",
+  "to_airport": "JFK",
+  "duration": "5h 30m",
+  "direct_flight": true,
+  "departure_time": "2025-08-15T08:00:00",
+  "arrival_time": "2025-08-15T16:30:00"
+}
+
+###
+
+### 11. Error case - Invalid country
+GET {{baseUrl}}/api/flight/country/InvalidCountry
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+###
+
+### 12. Error case - Invalid airport code
+GET {{baseUrl}}/api/flight/USA/INVALID
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+###
+
+### 13. Error case - Missing required fields in booking
+POST {{baseUrl}}/api/flight/book?user_principal_name={{userPrincipalName}}
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+{
+  "country": "USA"
+}
+
+###
+
+### 14. Error case - Invalid booking ID
+GET {{baseUrl}}/api/booking/INVALID_ID?user_principal_name={{userPrincipalName}}
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+###
+
+### 15. Error case - Cancel flight with missing fields
+DELETE {{baseUrl}}/api/flight/cancel
+Content-Type: application/json
+X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
+
+{
+  "bookingId": "BOOKING123"
+}
+
+###
+
+### 16. Error case - Missing authentication header
+GET {{baseUrl}}/api/airport/
+Content-Type: application/json
+
+###
