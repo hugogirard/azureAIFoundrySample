@@ -1,0 +1,502 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Flight Booking API",
+        "description": "API for managing flights bookings",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/airport/": {
+            "get": {
+                "summary": "Get Airport",
+                "description": "Return the list of all the airport",
+                "operationId": "get_airport_api_airport__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/Airport"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Airport Api Airport  Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/flight/country/{country}": {
+            "get": {
+                "summary": "Flight By Country",
+                "operationId": "flight_by_country_api_flight_country__country__get",
+                "parameters": [
+                    {
+                        "name": "country",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Country"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Flight"
+                                    },
+                                    "title": "Response Flight By Country Api Flight Country  Country  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/flight/{country}/{airport_code}": {
+            "get": {
+                "summary": "Flight By Airport",
+                "description": "Return the list of all flight for a specific destination",
+                "operationId": "flight_by_airport_api_flight__country___airport_code__get",
+                "parameters": [
+                    {
+                        "name": "country",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Country"
+                        }
+                    },
+                    {
+                        "name": "airport_code",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Airport Code"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Flight"
+                                    },
+                                    "title": "Response Flight By Airport Api Flight  Country   Airport Code  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/flight/book": {
+            "post": {
+                "summary": "Book Flight",
+                "description": "Book a flight ticket",
+                "operationId": "book_flight_api_flight_book_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BookRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BookingInfoRequest"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/flight/cancel": {
+            "delete": {
+                "summary": "Cancel Flight",
+                "description": "Cancel flight",
+                "operationId": "cancel_flight_api_flight_cancel_delete",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BookingInfoRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/booking/all": {
+            "get": {
+                "summary": "Get All Bookings",
+                "description": "Get all bookings for a specific user",
+                "operationId": "get_all_bookings_api_booking_all_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/FlightInfoRequest"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get All Bookings Api Booking All Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/booking/{booking_id}": {
+            "get": {
+                "summary": "Get Booking Info",
+                "operationId": "get_booking_info_api_booking__booking_id__get",
+                "parameters": [
+                    {
+                        "name": "booking_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Booking Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FlightInfoRequest"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Airport": {
+                "properties": {
+                    "country": {
+                        "type": "string",
+                        "title": "Country"
+                    },
+                    "airport_code": {
+                        "type": "string",
+                        "title": "Airport Code"
+                    },
+                    "airport_name": {
+                        "type": "string",
+                        "title": "Airport Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "country",
+                    "airport_code",
+                    "airport_name"
+                ],
+                "title": "Airport"
+            },
+            "BookRequest": {
+                "properties": {
+                    "country": {
+                        "type": "string",
+                        "title": "Country"
+                    },
+                    "flightCode": {
+                        "type": "string",
+                        "title": "Flightcode"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "country",
+                    "flightCode"
+                ],
+                "title": "BookRequest"
+            },
+            "BookingInfoRequest": {
+                "properties": {
+                    "bookingId": {
+                        "type": "string",
+                        "title": "Bookingid"
+                    },
+                    "country": {
+                        "type": "string",
+                        "title": "Country"
+                    },
+                    "flightCode": {
+                        "type": "string",
+                        "title": "Flightcode"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "country"
+                ],
+                "title": "BookingInfoRequest"
+            },
+            "Flight": {
+                "properties": {
+                    "country": {
+                        "type": "string",
+                        "title": "Country"
+                    },
+                    "flight_code": {
+                        "type": "string",
+                        "title": "Flight Code"
+                    },
+                    "airline": {
+                        "type": "string",
+                        "title": "Airline"
+                    },
+                    "from_airport": {
+                        "type": "string",
+                        "title": "From Airport"
+                    },
+                    "to_airport": {
+                        "type": "string",
+                        "title": "To Airport"
+                    },
+                    "price": {
+                        "type": "integer",
+                        "title": "Price"
+                    },
+                    "seats_available": {
+                        "type": "integer",
+                        "title": "Seats Available"
+                    },
+                    "duration": {
+                        "type": "string",
+                        "title": "Duration"
+                    },
+                    "direct_flight": {
+                        "type": "boolean",
+                        "title": "Direct Flight"
+                    },
+                    "departure_time": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Departure Time"
+                    },
+                    "arrival_time": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Arrival Time"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "country",
+                    "flight_code",
+                    "airline",
+                    "from_airport",
+                    "to_airport",
+                    "price",
+                    "seats_available",
+                    "duration",
+                    "direct_flight",
+                    "departure_time",
+                    "arrival_time"
+                ],
+                "title": "Flight"
+            },
+            "FlightInfoRequest": {
+                "properties": {
+                    "bookingId": {
+                        "type": "string",
+                        "title": "Bookingid"
+                    },
+                    "country": {
+                        "type": "string",
+                        "title": "Country"
+                    },
+                    "flightCode": {
+                        "type": "string",
+                        "title": "Flightcode"
+                    },
+                    "airline": {
+                        "type": "string",
+                        "title": "Airline"
+                    },
+                    "from_airport": {
+                        "type": "string",
+                        "title": "From Airport"
+                    },
+                    "to_airport": {
+                        "type": "string",
+                        "title": "To Airport"
+                    },
+                    "duration": {
+                        "type": "string",
+                        "title": "Duration"
+                    },
+                    "direct_flight": {
+                        "type": "boolean",
+                        "title": "Direct Flight"
+                    },
+                    "departure_time": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Departure Time"
+                    },
+                    "arrival_time": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Arrival Time"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "country",
+                    "airline",
+                    "from_airport",
+                    "to_airport",
+                    "duration",
+                    "direct_flight",
+                    "departure_time",
+                    "arrival_time"
+                ],
+                "title": "FlightInfoRequest"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}

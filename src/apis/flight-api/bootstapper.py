@@ -30,7 +30,10 @@ class Boostrapper:
 
     def run(self) -> FastAPI:
 
-        app = FastAPI(lifespan=lifespan_event)
+        app = FastAPI(lifespan=lifespan_event,
+                      title="Flight Booking API",
+                      description="API for managing flights bookings",
+                      version="1.0.0")
      
         self._configure_monitoring(app)
         
