@@ -73,15 +73,16 @@ async def book_flight(book_request:BookRequest,
       raise HTTPException(status_code=500, detail='Internal Server Error')        
 
 @router.delete("/cancel",description="Cancel flight")    
-async def cancel_flight(flight_info_request:FlightInfoRequest,
+async def cancel_flight(booking_info_request:BookingInfoRequest,
                         logger: Annotated[Logger, Depends(get_logger)],
                         table_client: Annotated[TableClient, Depends(get_table_client_flight)],
-                        repository: Annotated[FlightRepository, Depends(get_booking_repository)]):
+                        repository: Annotated[FlightRepository, Depends(get_booking_repository)],
+                        user_principal_name: Annotated[str,Depends(get_easy_auth_token)]):
     try:
-      await update_flight_seat(book_request=BookRequest(country=flight_info_request.country,flightCode=flight_info_request.flight_code),
+      await update_flight_seat(book_request=BookRequest(country=booking_info_request.country,flightCode=booking_info_request.flight_code),
                                table_client=table_client)
       
-      await repository.delete_booking(flight_info_request.id)
+      await repository.delete_booking(booking_info_request.id,user_principal_name)
 
       return {"message": "Flight cancelled successfully"}, 204    
     except Exception as e:

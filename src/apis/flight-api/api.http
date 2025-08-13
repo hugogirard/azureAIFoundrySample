@@ -75,16 +75,9 @@ Content-Type: application/json
 X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
 
 {
-  "bookingId": "BOOKING123",
+  "bookingId": "16ac3e2b-5c48-4fbd-9ebe-1cbb8d7d0c59",
   "country": "USA",
-  "flightCode": "AA101",
-  "airline": "American Airlines",
-  "from_airport": "LAX",
-  "to_airport": "JFK",
-  "duration": "5h 30m",
-  "direct_flight": true,
-  "departure_time": "2025-08-15T08:00:00",
-  "arrival_time": "2025-08-15T16:30:00"
+  "flightCode": "Delta008"
 }
 
 ###
