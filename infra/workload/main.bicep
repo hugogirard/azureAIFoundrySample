@@ -173,7 +173,7 @@ module rbac_user 'modules/user.rbac.bicep' = if (userObjectId != '' && userObjec
 
 output storageResourceId string = storageAccount.outputs.resourceId
 output storageAccountName string = storageAccount.outputs.name
-output storageTableEndpoint string = 'https://${storageAccount.outputs.name}.table.core.windows.net/'
+output storageTableEndpoint string = 'https://${storageAccount.outputs.name}.table.${environment().suffixes.storage}/'
 output cosmosDbEndpoint string = 'https://${databaseAccount.outputs.name}.documents.azure.com:443/'
 output airportTableName string = storageTables.outputs.tableNames[0]
 output flightTableName string = storageTables.outputs.tableNames[1]
