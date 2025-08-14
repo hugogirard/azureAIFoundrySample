@@ -43,15 +43,17 @@ module registry 'br/public:avm/res/container-registry/registry:0.9.1' = {
   }
 }
 
-/* Create container app environments 
+/* Create App Service
    will host MCP Server, APIs and Web App
 */
-module environment 'modules/environment.bicep' = {
+module asp 'br/public:avm/res/web/serverfarm:0.5.0' = {
   scope: rgResources
   params: {
+    name: 'asp-${suffix}'
+    kind: 'linux'
     location: location
-    infrastructureSubnetId: subnetAcaResourceId
-    suffix: suffix
+    skuCapacity: 1
+    skuName: 'P1v3'
   }
 }
 
@@ -169,8 +171,6 @@ module rbac_user 'modules/user.rbac.bicep' = if (userObjectId != '' && userObjec
   }
 }
 
-output acaEnvironmentResourceName string = environment.outputs.acaEnvironmentResourceName
-output acaResourceId string = environment.outputs.acaResourceId
 output storageResourceId string = storageAccount.outputs.resourceId
 output storageAccountName string = storageAccount.outputs.name
 output storageTableEndpoint string = 'https://${storageAccount.outputs.name}.table.core.windows.net/'
