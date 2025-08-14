@@ -19,6 +19,7 @@ resource rgResources 'Microsoft.Resources/resourceGroups@2025-04-01' = {
 
 var suffix = replace(uniqueString(rgResources.id), '-', '')
 
+#disable-next-line BCP334
 module registry 'br/public:avm/res/container-registry/registry:0.9.1' = {
   scope: rgResources
   params: {
@@ -51,6 +52,14 @@ module web 'modules/web.bicep' = {
   params: {
     location: location
     suffix: suffix
+  }
+}
+
+module rbacweb 'modules/web.rbac.bicep' = {
+  scope: rgResources
+  params: {
+    acrResourceName: registry.outputs.name
+    flightApiPrincipalId: web.outputs.fligtapiPrincipalId
   }
 }
 
