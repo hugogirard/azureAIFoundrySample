@@ -76,6 +76,6 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v6
       with:
-        context: '/src/apis/flight-api'
+        context: ./src/apis/flight-api
         push: true
-        tags: flight-api:${{ github.run_id }}
+        tags: ${{ secrets.ACR_LOGIN_SERVER }}/flight-api:${{ github.run_id }}
