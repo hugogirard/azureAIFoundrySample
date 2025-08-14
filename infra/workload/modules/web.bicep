@@ -11,7 +11,7 @@ resource asp 'Microsoft.Web/serverfarms@2024-11-01' = {
   }
   sku: {
     tier: 'Premium0V3'
-    name: 'P0V3'
+    name: 'P1V3'
   }
 }
 
