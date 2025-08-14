@@ -22,7 +22,7 @@ var suffix = replace(uniqueString(rgResources.id), '-', '')
 module registry 'br/public:avm/res/container-registry/registry:0.9.1' = {
   scope: rgResources
   params: {
-    name: 'acr${suffix}'
+    name: 'acrwk${suffix}'
     location: location
     acrSku: 'Premium'
     publicNetworkAccess: publicNetworkAccess
