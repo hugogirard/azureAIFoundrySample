@@ -5,7 +5,7 @@ param privateDnsRegistryResourceId string
 param privateDnsStorableTableResourceId string
 param privateDnsCosmosDBResourceId string
 param userObjectId string
-param subnetAcaResourceId string
+// param subnetAcaResourceId string
 param workloadResourceGroupName string
 param location string
 param lockdown bool

@@ -8,7 +8,7 @@ param privateEndpointSubnetResourceId = '__privateEndpointSubnetResourceId__'
 
 param workloadResourceGroupName = '__workloadResourceGroupName__'
 
-param subnetAcaResourceId = '__subnetAcaResourceId__'
+// param subnetAcaResourceId = '__subnetAcaResourceId__'
 
 param privateDnsStorableTableResourceId = '__privateDnsStorableTableResourceId__'
 
