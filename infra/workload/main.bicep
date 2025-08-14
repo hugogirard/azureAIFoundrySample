@@ -22,7 +22,7 @@ var suffix = replace(uniqueString(rgResources.id), '-', '')
 module registry 'br/public:avm/res/container-registry/registry:0.9.1' = {
   scope: rgResources
   params: {
-    name: 'acrwk${suffix}'
+    name: 'acr${suffix}'
     location: location
     acrSku: 'Premium'
     publicNetworkAccess: publicNetworkAccess
@@ -46,14 +46,11 @@ module registry 'br/public:avm/res/container-registry/registry:0.9.1' = {
 /* Create App Service
    will host MCP Server, APIs and Web App
 */
-module asp 'br/public:avm/res/web/serverfarm:0.5.0' = {
+module web 'modules/web.bicep' = {
   scope: rgResources
   params: {
-    name: 'asp-${suffix}'
-    kind: 'linux'
     location: location
-    skuCapacity: 1
-    skuName: 'P1v3'
+    suffix: suffix
   }
 }
 
