@@ -22,9 +22,7 @@ resource flightapi 'Microsoft.Web/sites@2024-11-01' = {
     type: 'SystemAssigned'
   }
   properties: {
-    siteConfig: {
-      alwaysOn: true
-    }
+    siteConfig: {}
   }
 }
 
