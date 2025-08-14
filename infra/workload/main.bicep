@@ -27,6 +27,7 @@ module registry 'br/public:avm/res/container-registry/registry:0.9.1' = {
     acrSku: 'Premium'
     publicNetworkAccess: publicNetworkAccess
     exportPolicyStatus: 'enabled'
+    acrAdminUserEnabled: true
     privateEndpoints: [
       {
         privateDnsZoneGroup: {
@@ -177,3 +178,4 @@ output cosmosDbEndpoint string = 'https://${databaseAccount.outputs.name}.docume
 output airportTableName string = storageTables.outputs.tableNames[0]
 output flightTableName string = storageTables.outputs.tableNames[1]
 output cosmosDbName string = databaseAccount.outputs.name
+output acrServerEndpoint string = registry.outputs.loginServer

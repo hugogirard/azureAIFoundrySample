@@ -55,3 +55,26 @@ jobs:
         DELETE_TABLE: "true"
       run: |
         python seed.py
+
+  build-deploy-image:
+    runs-on: ubuntu-latest
+    
+    steps:
+
+    # - name: Checkout code
+    #   uses: actions/checkout@v4    
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - uses: azure/docker-login@v2
+      with:
+        login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+        username: ${{ secrets.ACR_ADMIN_USERNAME }}
+        password: ${{ secrets.ACR_ADMIN_PASSWORD }}
+
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        push: true
+        tags: flight-api:${{ github.run_id }}

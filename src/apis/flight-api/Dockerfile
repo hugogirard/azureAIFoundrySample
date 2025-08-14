@@ -1,5 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.12.11-bookworm
+FROM python:3.12.11-alpine3.21
 
 EXPOSE 8000
 

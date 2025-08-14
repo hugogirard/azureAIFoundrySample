@@ -79,3 +79,10 @@ jobs:
           name: COSMOS_DB_ENDPOINT
           value: ${{ steps.createResources.outputs.cosmosDbEndpoint }}
           pa_token: ${{ secrets.PA_TOKEN }}
+
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: ACR_LOGIN_SERVER
+          value: ${{ steps.createResources.outputs.acrServerEndpoint }}
+          pa_token: ${{ secrets.PA_TOKEN }}
