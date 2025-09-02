@@ -227,7 +227,7 @@ module apim 'br/public:avm/res/api-management/service:0.9.1' = {
   scope: rgResources
   params: {
     // Required parameters
-    name: 'api-${suffix}'
+    name: 'apim-${suffix}'
     publisherEmail: publisherEmail
     publisherName: publisherName
     // Non-required parameters
