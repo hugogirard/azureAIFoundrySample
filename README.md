@@ -98,6 +98,34 @@ flowchart TD
 2. **Trigger** the `core.yml` workflow in GitHub Actions.
 3. Wait for completion. The workflow will also **save outputs as new secrets** for the next steps.
 
+### 📤 **Secrets Created by this Workflow**
+
+After successful completion, the following secrets will be automatically created in your repository:
+
+| Secret Name | Description | Source |
+|-------------|-------------|---------|
+| `RESOURCE_GROUP_NAME` | Name of the core resources resource group | Bicep output |
+| `LOCATION` | Azure region where resources were deployed | Bicep output |
+| `VNET_RESOURCE_NAME` | Name of the Virtual Network | Bicep output |
+| `VNET_RESOURCE_GROUP_NAME` | Resource group containing the VNet | Bicep output |
+| `SUBNET_AGENT_RESOURCE_NAME` | Name of the agent subnet | Bicep output |
+| `SUBNET_AGENT_ID` | Resource ID of the agent subnet | Bicep output |
+| `SUBNET_PRIVATE_ENDPOINT_ID` | Resource ID of the private endpoint subnet | Bicep output |
+| `SUBNET_PRIVATE_ENDPOINT_RESOURCE_NAME` | Name of the private endpoint subnet | Bicep output |
+| `AI_SERVICES_PRIVATE_DNS_ZONE_RESOURCE_NAME` | Name of AI Services private DNS zone | Bicep output |
+| `COGNITIVE_SERVICES_PRIVATE_DNS_ZONE_RESOURCE_NAME` | Name of Cognitive Services private DNS zone | Bicep output |
+| `OPEN_AI_PRIVATE_DNS_ZONE_RESOURCE_NAME` | Name of OpenAI private DNS zone | Bicep output |
+| `PRIVATE_DNS_RESOURCE_GROUP_NAME` | Resource group containing private DNS zones | Bicep output |
+| `AI_SEARCH_RESOURCE_NAME` | Name of the Azure AI Search service | Bicep output |
+| `AZURE_COSMOS_DB_ACCOUNT_RESOURCE_NAME` | Name of the CosmosDB account | Bicep output |
+| `STORAGE_ACCOUNT_RESOURCE_NAME` | Name of the storage account | Bicep output |
+| `PRIVATE_DNS_REGISTRY_RESOURCE_ID` | Resource ID of the container registry private DNS zone | Bicep output |
+| `SUBNET_ACA_RESOURCE_ID` | Resource ID of the Azure Container Apps subnet | Bicep output |
+| `TABLE_STORAGE_PRIVATE_DNS_ZONE_RESOURCE_ID` | Resource ID of the table storage private DNS zone | Bicep output |
+| `COSMOSDB_PRIVATE_DNS_ZONE_RESOURCE_ID` | Resource ID of the CosmosDB private DNS zone | Bicep output |
+
+> 💡 **Note:** These secrets are automatically created by the workflow and will be used by subsequent deployment steps (foundry.yml and project.yml).
+
 ---
 
 ## 3️⃣ Step 2: Deploy AI Foundry Resource (`foundry.yml`)
