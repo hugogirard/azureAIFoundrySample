@@ -24,4 +24,4 @@ param publisherName = '__publisherName__'
 
 param apimSubnetAddressPrefix = '__apimSubnetAddressPrefix__'
 
-param subnetAcaAddressPrefix = '__subnetAcaAddressPrefix__'
+param subnetWebFarmAddressPrefix = '__subnetWebFarmAddressPrefix__'

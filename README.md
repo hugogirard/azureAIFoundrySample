@@ -20,6 +20,7 @@ Before starting, you’ll need to create several **GitHub repository secrets**. 
 | `SUBNET_PRIVATE_ENDPOINT_ADDRESS_PREFIX` | Address prefix for private endpoint subnet                | `10.0.3.0/24`                        |
 | `VNET_ADDRESS_PREFIX`                    | Address prefix for the VNet                               | `10.0.0.0/16`                        |
 | `SUBNET_APIM_ADDRESS_PREFIX`             | Address prefix for APIM subnet                            | `10.0.4.0/24`                        |
+| `WEBFARM_SUBNET_ADDRESS_PREFIX`          | Address prefix for WebApp subnet                          | `10.0.5.0/24` |
 | `PUBLISHER_EMAIL`                        | Email for APIM publisher                                  | `admin@contoso.com`                  |
 | `PUBLISHER_NAME`                         | Name for APIM publisher                                   | `Contoso`                            |
 | `VM_PASSWORD`                            | Password for the Windows jumpbox                          | `YourSecurePassword123!`             |

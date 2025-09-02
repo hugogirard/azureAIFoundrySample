@@ -14,7 +14,7 @@ param subnetJumpboxAddressPrefix string
 
 param apimSubnetAddressPrefix string
 
-param subnetAcaAddressPrefix string
+param subnetWebFarmAddressPrefix string
 
 param publisherEmail string
 
@@ -188,9 +188,9 @@ module virtualNetwork 'br/public:avm/res/network/virtual-network:0.7.0' = {
         networkSecurityGroupResourceId: apiNsg.outputs.resourceId
       }
       {
-        name: 'snet-aca'
-        addressPrefix: subnetAcaAddressPrefix
-        delegation: 'Microsoft.App/environments'
+        name: 'snet-api'
+        addressPrefix: subnetWebFarmAddressPrefix
+        delegation: 'Microsoft.Web/serverFarms'
       }
     ]
   }
