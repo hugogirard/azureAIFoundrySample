@@ -65,31 +65,97 @@ The [`infra/base/main.bicep`](infra/base/main.bicep) file provisions the **core 
 
 ```mermaid
 flowchart TD
-    subgraph RG["Resource Group"]
-        VNET["Virtual Network"]
-        SA["Storage Account"]
-        COSMOS["CosmosDB Account"]
-        SEARCH["AI Search Service"]
-        APIM["API Management"]
-        JUMPBOX["Jumpbox VM"]
-        DNS1["Private DNS Zone - Blob"]
-        DNS2["Private DNS Zone - Cognitive Services"]
-        DNS3["Private DNS Zone - CosmosDB"]
-        DNS4["Private DNS Zone - OpenAI"]
-        DNS5["Private DNS Zone - AI Services"]
-        DNS6["Private DNS Zone - Search"]
+    subgraph RG_VNET["Resource Group (VNet)"]
+        VNET["🌐 Virtual Network<br/>vnet-ai"]
+        
+        subgraph SUBNETS["Subnets"]
+            SUBNET_AGENT["Agent Subnet<br/>snet-agent<br/>Delegation: Microsoft.App/environments"]
+            SUBNET_PE["Private Endpoint Subnet<br/>snet-pe"]
+            SUBNET_JUMPBOX["Jumpbox Subnet<br/>snet-jumpbox"]
+            SUBNET_APIM["APIM Subnet<br/>snet-apim"]
+            SUBNET_API["Web Farm Subnet<br/>snet-api<br/>Delegation: Microsoft.Web/serverFarms"]
+        end
+        
+        NSG_JUMPBOX["🛡️ NSG<br/>nsg-jumpbox"]
+        NSG_APIM["🛡️ NSG<br/>nsg-apim"]
+        
+        JUMPBOX["💻 Windows Jumpbox VM<br/>Standard_D2s_v3"]
+        BUILD_AGENT["🔨 Build Agent VM<br/>Ubuntu 22.04<br/>Standard_D2ls_v5"]
+        
+        PIP_APIM["📍 Public IP<br/>pip-apim"]
+        
+        subgraph DNS_ZONES["Private DNS Zones"]
+            DNS_BLOB["privatelink.blob.core.windows.net"]
+            DNS_COGNITIVE["privatelink.cognitiveservices.azure.com"]
+            DNS_COSMOS["privatelink.documents.azure.com"]
+            DNS_OPENAI["privatelink.openai.azure.com"]
+            DNS_AI_SERVICES["privatelink.services.ai.azure.com"]
+            DNS_SEARCH["privatelink.search.windows.net"]
+            DNS_ACR["privatelink.azurecr.io"]
+            DNS_TABLE["privatelink.table.core.windows.net"]
+        end
     end
-    VNET --> SA
-    VNET --> COSMOS
-    VNET --> SEARCH
-    VNET --> JUMPBOX
-    VNET --> APIM
-    VNET --> DNS1
-    VNET --> DNS2
-    VNET --> DNS3
-    VNET --> DNS4
-    VNET --> DNS5
-    VNET --> DNS6
+    
+    subgraph RG_RESOURCES["Resource Group (Resources)"]
+        APIM["🚪 API Management<br/>apim-{suffix}<br/>Developer SKU<br/>External VNet Mode"]
+        SEARCH["🔍 AI Search Service<br/>search-{suffix}<br/>Standard SKU<br/>Private Access Only"]
+        STORAGE["💾 Storage Account<br/>str{suffix}<br/>Standard_LRS<br/>Private Access Only"]
+        COSMOS["🗄️ CosmosDB Account<br/>cosmos-{suffix}<br/>Private Access Only"]
+    end
+    
+    %% Network relationships
+    VNET --> SUBNET_AGENT
+    VNET --> SUBNET_PE
+    VNET --> SUBNET_JUMPBOX
+    VNET --> SUBNET_APIM
+    VNET --> SUBNET_API
+    
+    %% NSG relationships
+    NSG_JUMPBOX --> SUBNET_JUMPBOX
+    NSG_APIM --> SUBNET_APIM
+    
+    %% VM relationships
+    JUMPBOX --> SUBNET_JUMPBOX
+    BUILD_AGENT --> SUBNET_JUMPBOX
+    
+    %% APIM relationships
+    APIM --> SUBNET_APIM
+    PIP_APIM --> APIM
+    
+    %% Private Endpoint relationships
+    STORAGE -.->|Private Endpoint| SUBNET_PE
+    COSMOS -.->|Private Endpoint| SUBNET_PE
+    SEARCH -.->|Private Endpoint| SUBNET_PE
+    
+    %% DNS Zone relationships
+    DNS_BLOB -.->|VNet Link| VNET
+    DNS_COGNITIVE -.->|VNet Link| VNET
+    DNS_COSMOS -.->|VNet Link| VNET
+    DNS_OPENAI -.->|VNet Link| VNET
+    DNS_AI_SERVICES -.->|VNet Link| VNET
+    DNS_SEARCH -.->|VNet Link| VNET
+    DNS_ACR -.->|VNet Link| VNET
+    DNS_TABLE -.->|VNet Link| VNET
+    
+    %% DNS Record relationships
+    JUMPBOX -.->|A Records| DNS_ZONES
+    BUILD_AGENT -.->|A Records| DNS_ZONES
+    
+    %% Private DNS Zone to Private Endpoint relationships
+    STORAGE -.->|DNS Resolution| DNS_BLOB
+    COSMOS -.->|DNS Resolution| DNS_COSMOS
+    SEARCH -.->|DNS Resolution| DNS_SEARCH
+    
+    %% Styling
+    style RG_VNET fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style RG_RESOURCES fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style SUBNETS fill:#e8f5e8,stroke:#388e3c
+    style DNS_ZONES fill:#fff3e0,stroke:#f57c00
+    style VNET fill:#bbdefb
+    style APIM fill:#f8bbd9
+    style SEARCH fill:#ffcdd2
+    style STORAGE fill:#dcedc8
+    style COSMOS fill:#ffe0b2
 ```
 
 ### ⚙️ **How to run**
@@ -211,6 +277,145 @@ The [`infra/project/main.bicep`](infra/project/main.bicep) file provisions the *
 1. Ensure all previous workflows completed and secrets are available.
 2. **Trigger** the `project.yml` workflow in GitHub Actions.
 3. Provide the required project inputs (name, display name, description).
+
+---
+
+## 🏗️ **Complete Architecture Overview**
+
+This diagram shows all resources created across the three deployment phases:
+
+```mermaid
+flowchart TD
+    subgraph PHASE1["Phase 1: Core Infrastructure (core.yml)"]
+        subgraph RG_VNET["Resource Group (VNet)"]
+            VNET["🌐 Virtual Network<br/>vnet-ai<br/>172.16.0.0/16"]
+            
+            subgraph SUBNETS["Subnets"]
+                SUBNET_AGENT["🔗 Agent Subnet<br/>snet-agent<br/>172.16.1.0/24<br/>Delegation: Microsoft.App/environments"]
+                SUBNET_PE["🔌 Private Endpoint Subnet<br/>snet-pe<br/>172.16.3.0/24"]
+                SUBNET_JUMPBOX["🖥️ Jumpbox Subnet<br/>snet-jumpbox<br/>172.16.2.0/24"]
+                SUBNET_APIM["🚪 APIM Subnet<br/>snet-apim<br/>172.16.4.0/24"]
+                SUBNET_API["🌐 Web Farm Subnet<br/>snet-api<br/>172.16.5.0/24<br/>Delegation: Microsoft.Web/serverFarms"]
+            end
+            
+            NSG_JUMPBOX["🛡️ NSG<br/>nsg-jumpbox"]
+            NSG_APIM["🛡️ NSG<br/>nsg-apim<br/>APIM Management Rules"]
+            
+            JUMPBOX["💻 Windows Jumpbox VM<br/>Standard_D2s_v3<br/>Auto-shutdown: 23:59 UTC"]
+            BUILD_AGENT["🔨 Build Agent VM<br/>Ubuntu 22.04<br/>Standard_D2ls_v5<br/>Auto-shutdown: 23:59 UTC"]
+            
+            PIP_APIM["📍 Public IP<br/>pip-apim"]
+            
+            subgraph DNS_ZONES["Private DNS Zones"]
+                DNS_BLOB["🔗 privatelink.blob.core.windows.net"]
+                DNS_COGNITIVE["🧠 privatelink.cognitiveservices.azure.com"]
+                DNS_COSMOS["🗄️ privatelink.documents.azure.com"]
+                DNS_OPENAI["🤖 privatelink.openai.azure.com"]
+                DNS_AI_SERVICES["⚡ privatelink.services.ai.azure.com"]
+                DNS_SEARCH["🔍 privatelink.search.windows.net"]
+                DNS_ACR["📦 privatelink.azurecr.io"]
+                DNS_TABLE["📊 privatelink.table.core.windows.net"]
+            end
+        end
+        
+        subgraph RG_RESOURCES["Resource Group (Resources)"]
+            APIM["🚪 API Management<br/>apim-{suffix}<br/>Developer SKU<br/>External VNet Mode"]
+            SEARCH["🔍 AI Search Service<br/>search-{suffix}<br/>Standard SKU<br/>Private Access Only"]
+            STORAGE["💾 Storage Account<br/>str{suffix}<br/>Standard_LRS<br/>Private Access Only"]
+            COSMOS["🗄️ CosmosDB Account<br/>cosmos-{suffix}<br/>Private Access Only<br/>No Local Auth"]
+        end
+    end
+    
+    subgraph PHASE2["Phase 2: AI Foundry Account (foundry.yml)"]
+        FOUNDRY["🤖 AI Foundry Account<br/>(Cognitive Services)<br/>- Kind: AIServices<br/>- Private Access Only<br/>- Managed Identity<br/>- VNet Injected"]
+    end
+    
+    subgraph PHASE3["Phase 3: AI Foundry Project (project.yml)"]
+        PROJECT["📦 AI Foundry Project<br/>- Display Name<br/>- Description<br/>- Connections to all services"]
+        CAPABILITY_HOST["⚡ Capability Host<br/>Agent Operations"]
+        RBAC_ASSIGNMENTS["🔐 RBAC Assignments<br/>- Storage Blob Data Contributor<br/>- Search Index Data Contributor<br/>- CosmosDB Data Contributor"]
+    end
+    
+    %% Phase 1 Network relationships
+    VNET --> SUBNET_AGENT
+    VNET --> SUBNET_PE
+    VNET --> SUBNET_JUMPBOX
+    VNET --> SUBNET_APIM
+    VNET --> SUBNET_API
+    
+    %% NSG relationships
+    NSG_JUMPBOX --> SUBNET_JUMPBOX
+    NSG_APIM --> SUBNET_APIM
+    
+    %% VM relationships
+    JUMPBOX --> SUBNET_JUMPBOX
+    BUILD_AGENT --> SUBNET_JUMPBOX
+    
+    %% APIM relationships
+    APIM --> SUBNET_APIM
+    PIP_APIM --> APIM
+    
+    %% Private Endpoint relationships
+    STORAGE -.->|Private Endpoint<br/>Blob Service| SUBNET_PE
+    COSMOS -.->|Private Endpoint<br/>SQL API| SUBNET_PE
+    SEARCH -.->|Private Endpoint| SUBNET_PE
+    
+    %% DNS Zone relationships
+    DNS_BLOB -.->|VNet Link| VNET
+    DNS_COGNITIVE -.->|VNet Link| VNET
+    DNS_COSMOS -.->|VNet Link| VNET
+    DNS_OPENAI -.->|VNet Link| VNET
+    DNS_AI_SERVICES -.->|VNet Link| VNET
+    DNS_SEARCH -.->|VNet Link| VNET
+    DNS_ACR -.->|VNet Link| VNET
+    DNS_TABLE -.->|VNet Link| VNET
+    
+    %% DNS Record relationships
+    JUMPBOX -.->|A Records in all zones| DNS_ZONES
+    BUILD_AGENT -.->|A Records in all zones| DNS_ZONES
+    
+    %% Private DNS Zone to Private Endpoint relationships
+    STORAGE -.->|DNS Resolution| DNS_BLOB
+    STORAGE -.->|DNS Resolution| DNS_TABLE
+    COSMOS -.->|DNS Resolution| DNS_COSMOS
+    SEARCH -.->|DNS Resolution| DNS_SEARCH
+    
+    %% Phase 2 relationships
+    SUBNET_AGENT -.->|VNet Injection| FOUNDRY
+    RG_RESOURCES --> FOUNDRY
+    FOUNDRY -.->|DNS Resolution| DNS_COGNITIVE
+    FOUNDRY -.->|DNS Resolution| DNS_OPENAI
+    FOUNDRY -.->|DNS Resolution| DNS_AI_SERVICES
+    
+    %% Phase 3 relationships
+    FOUNDRY --> PROJECT
+    PROJECT --> CAPABILITY_HOST
+    PROJECT -.->|Connection| STORAGE
+    PROJECT -.->|Connection| COSMOS
+    PROJECT -.->|Connection| SEARCH
+    PROJECT --> RBAC_ASSIGNMENTS
+    RBAC_ASSIGNMENTS -.->|Access Control| STORAGE
+    RBAC_ASSIGNMENTS -.->|Access Control| COSMOS
+    RBAC_ASSIGNMENTS -.->|Access Control| SEARCH
+    
+    %% Styling
+    style PHASE1 fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    style PHASE2 fill:#e8f5e8,stroke:#4caf50,stroke-width:3px
+    style PHASE3 fill:#fff3e0,stroke:#ff9800,stroke-width:3px
+    style RG_VNET fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style RG_RESOURCES fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    style SUBNETS fill:#e8f5e8,stroke:#388e3c
+    style DNS_ZONES fill:#fff3e0,stroke:#f57c00
+    style VNET fill:#bbdefb
+    style APIM fill:#f8bbd9
+    style SEARCH fill:#ffcdd2
+    style STORAGE fill:#dcedc8
+    style COSMOS fill:#ffe0b2
+    style FOUNDRY fill:#c8e6c9
+    style PROJECT fill:#ffe0b2
+    style CAPABILITY_HOST fill:#ffccbc
+    style RBAC_ASSIGNMENTS fill:#f8bbd9
+```
 
 ---
 
