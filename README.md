@@ -15,12 +15,12 @@ Before starting, you’ll need to create several **GitHub repository secrets**. 
 | `LOCATION`                              | Azure region for deployment                               | `eastus2`                            |
 | `RESOURCE_GROUP_NAME`                    | Resource group for core resources                         | `rg-ai-foundry-resources`            |
 | `VNET_RESOURCE_GROUP_NAME`               | Resource group for the VNet                               | `rg-vnet`                            |
-| `SUBNET_AGENT_ADDRESS_PREFIX`            | Address prefix for agent subnet                           | `10.0.1.0/24`                        |
-| `JUMPBOX_SUBNET_ADDRESS_PREFIX`          | Address prefix for jumpbox subnet                         | `10.0.2.0/24`                        |
-| `SUBNET_PRIVATE_ENDPOINT_ADDRESS_PREFIX` | Address prefix for private endpoint subnet                | `10.0.3.0/24`                        |
-| `VNET_ADDRESS_PREFIX`                    | Address prefix for the VNet                               | `10.0.0.0/16`                        |
-| `SUBNET_APIM_ADDRESS_PREFIX`             | Address prefix for APIM subnet                            | `10.0.4.0/24`                        |
-| `WEBFARM_SUBNET_ADDRESS_PREFIX`          | Address prefix for WebApp subnet                          | `10.0.5.0/24` |
+| `SUBNET_AGENT_ADDRESS_PREFIX`            | Address prefix for agent subnet                           | `172.16.1.0/24`                      |
+| `JUMPBOX_SUBNET_ADDRESS_PREFIX`          | Address prefix for jumpbox subnet                         | `172.16.2.0/24`                      |
+| `SUBNET_PRIVATE_ENDPOINT_ADDRESS_PREFIX` | Address prefix for private endpoint subnet                | `172.16.3.0/24`                      |
+| `VNET_ADDRESS_PREFIX`                    | Address prefix for the VNet                               | `172.16.0.0/16`                      |
+| `SUBNET_APIM_ADDRESS_PREFIX`             | Address prefix for APIM subnet                            | `172.16.4.0/24`                      |
+| `WEBFARM_SUBNET_ADDRESS_PREFIX`          | Address prefix for WebApp subnet                          | `172.16.5.0/24`                      |
 | `PUBLISHER_EMAIL`                        | Email for APIM publisher                                  | `admin@contoso.com`                  |
 | `PUBLISHER_NAME`                         | Name for APIM publisher                                   | `Contoso`                            |
 | `VM_PASSWORD`                            | Password for the Windows jumpbox                          | `YourSecurePassword123!`             |
@@ -28,6 +28,8 @@ Before starting, you’ll need to create several **GitHub repository secrets**. 
 | `PA_TOKEN`                               | GitHub Personal Access Token (for secret creation)        |                                      |
 | `AZURE_CREDENTIALS`                      | Azure Service Principal credentials (JSON)                | `{...}`                              |
 | `AZURE_SUBSCRIPTION`                     | Azure Subscription ID                                     | `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` |
+
+> ⚠️ **Important - Subnet IP Address Limitation:** Azure AI Foundry Agent requires that all subnets use IP address ranges under **172.16.0.0/12** or **192.168.0.0/16**. The example values above use 172.16.0.0/16 to comply with this requirement.
 
 > 💡 **Tip:** To create the Azure Service Principal for `AZURE_CREDENTIALS`, run:
 > ```bash
@@ -38,7 +40,7 @@ Before starting, you’ll need to create several **GitHub repository secrets**. 
 
 ## 2️⃣ Step 1: Deploy Core Infrastructure (`core.yml`)
 
-**First, run the `core.yml` GitHub Action.**
+**First, run the `Create Core Resources` GitHub Action.**
 
 ### 🏗️ What does it create?
 
@@ -100,7 +102,7 @@ flowchart TD
 
 ## 3️⃣ Step 2: Deploy AI Foundry Resource (`foundry.yml`)
 
-**Next, run the `foundry.yml` GitHub Action.**
+**Next, run the `Create AI Foundry Resource` GitHub Action.**
 
 ### 🤖 What does it create?
 
@@ -111,7 +113,31 @@ The [`infra/foundry/main.bicep`](infra/foundry/main.bicep) file provisions the *
 - **System-assigned Managed Identity**
 - **Disables public network access** (private only)
 
-### 🗝️ **Secrets Used**
+### �️ **Architecture Diagram**
+
+```mermaid
+flowchart TD
+    subgraph EXISTING["Existing Resources (from Step 1)"]
+        VNET["Virtual Network<br/>172.16.0.0/16"]
+        AGENT_SUBNET["Agent Subnet<br/>172.16.1.0/24"]
+        RG["Resource Group"]
+    end
+    
+    subgraph NEW["New Resources (Step 2)"]
+        FOUNDRY["🤖 AI Foundry Account<br/>(Cognitive Services)<br/>- Kind: AIServices<br/>- Private Access Only<br/>- Managed Identity"]
+    end
+    
+    VNET --> AGENT_SUBNET
+    AGENT_SUBNET -.->|VNet Injection| FOUNDRY
+    RG --> FOUNDRY
+    
+    style FOUNDRY fill:#e1f5fe
+    style AGENT_SUBNET fill:#f3e5f5
+    style NEW fill:#e8f5e8,stroke:#4caf50
+    style EXISTING fill:#fff3e0,stroke:#ff9800
+```
+
+### �🗝️ **Secrets Used**
 
 - `LOCATION`
 - `SUBNET_AGENT_ID`
