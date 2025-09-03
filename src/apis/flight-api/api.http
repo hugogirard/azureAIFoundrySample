@@ -57,7 +57,7 @@ X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
 ###
 
 ### 9. Get booking info by booking ID (replace with actual booking ID from previous booking)
-GET {{baseUrl}}/api/booking/16ac3e2b-5c48-4fbd-9ebe-1cbb8d7d0c59
+GET {{baseUrl}}/api/booking/4ffecb3e-f335-40d3-a1f3-2a7b00bcdcea
 Content-Type: application/json
 X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
 
@@ -75,7 +75,7 @@ Content-Type: application/json
 X-MS-CLIENT-PRINCIPAL-NAME: {{userPrincipalName}}
 
 {
-  "bookingId": "16ac3e2b-5c48-4fbd-9ebe-1cbb8d7d0c59",
+  "bookingId": "4ffecb3e-f335-40d3-a1f3-2a7b00bcdcea",
   "country": "USA",
   "flightCode": "Delta008"
 }
