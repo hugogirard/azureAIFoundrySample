@@ -1,0 +1,46 @@
+name: Seeding the airport and flight table
+
+on:
+  workflow_dispatch:
+
+jobs:
+  seed-tables:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Azure Login
+      uses: Azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('src/apis/flight-api/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      working-directory: ./src/apis/flight-api
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Seed database tables
+      working-directory: ./src/apis/flight-api
+      env:        
+        AZURE_STORAGE_ENDPOINT: ${{ secrets.STORAGE_TABLE_ENDPOINT }}
+        AZURE_STORAGE_AIRPORT_TABLE: 'airporttable'
+        AZURE_STORAGE_FLIGHT_TABLE: 'flighttable'
+        DELETE_TABLE: "true"
+      run: |
+        python seed.py

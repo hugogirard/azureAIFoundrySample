@@ -5,7 +5,7 @@ param privateDnsRegistryResourceId string
 param privateDnsStorableTableResourceId string
 param privateDnsCosmosDBResourceId string
 param userObjectId string
-// param subnetAcaResourceId string
+param servicePrincipalActionId string
 param workloadResourceGroupName string
 param location string
 param lockdown bool
@@ -96,6 +96,30 @@ module storageAccount 'br/public:avm/res/storage/storage-account:0.25.0' = {
     allowSharedKeyAccess: false
     publicNetworkAccess: publicNetworkAccess
     networkAcls: networkAcls
+  }
+}
+
+module web_rbac_storage 'modules/storage.rbac.bicep' = {
+  scope: rgResources
+  params: {
+    principalId: web.outputs.fligtapiPrincipalId
+    storageResourceName: storageAccount.outputs.name
+  }
+}
+
+module user_rbac_storage 'modules/storage.rbac.bicep' = if (userObjectId != '' && userObjectId != null) {
+  scope: rgResources
+  params: {
+    principalId: userObjectId
+    storageResourceName: storageAccount.outputs.name
+  }
+}
+
+module sp_rbac_storage 'modules/storage.rbac.bicep' = {
+  scope: rgResources
+  params: {
+    principalId: servicePrincipalActionId
+    storageResourceName: storageAccount.outputs.name
   }
 }
 

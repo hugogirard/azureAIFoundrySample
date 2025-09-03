@@ -30,6 +30,7 @@ Before starting, you’ll need to create several **GitHub repository secrets**. 
 | `AZURE_CREDENTIALS`                      | Azure Service Principal credentials (JSON)                | `{...}`                              |
 | `AZURE_SUBSCRIPTION`                     | Azure Subscription ID                                     | `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` |
 | `USER_OBJECT_ID`                         | Azure AD User Object ID (for RBAC assignments)           | `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` |
+| `SERVICE_PRINCIPAL_ACTION_ID`            | Service Principal Object ID for GitHub Actions authentication | `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` |
 
 > ⚠️ **Important - Subnet IP Address Limitation:** Azure AI Foundry Agent requires that all subnets use IP address ranges under **172.16.0.0/12** or **192.168.0.0/16**. The example values above use 172.16.0.0/16 to comply with this requirement.
 
@@ -39,6 +40,17 @@ Before starting, you’ll need to create several **GitHub repository secrets**. 
 > ```
 > 
 > ⚠️ **Note:** Owner permissions are required at the subscription level because the Azure AI Foundry Project deployment needs to assign RBAC roles to managed identities and service principals.
+
+> 🔧 **SERVICE_PRINCIPAL_ACTION_ID Explained:**
+> This is the **Object ID** (not Application ID) of the Service Principal created above. It's required for RBAC assignments during workload deployment. To find it after creating your Service Principal:
+> ```bash
+> # Method 1: Using Azure CLI (replace 'foundry-iac' with your SP name)
+> az ad sp show --display-name foundry-iac --query "id" -o tsv
+> 
+> # Method 2: Using the Application ID from AZURE_CREDENTIALS
+> az ad sp show --id <application-id-from-azure-credentials> --query "id" -o tsv
+> ```
+> The Service Principal needs to be granted permissions to Azure resources so the workload can authenticate and access storage, CosmosDB, and other services during deployment.
 
 ---
 

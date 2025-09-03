@@ -17,3 +17,5 @@ param lockdown = false
 param privateDnsCosmosDBResourceId = '__privateDnsCosmosDBResourceId__'
 
 param userObjectId = ''
+
+param servicePrincipalActionId = '__servicePrincipalActionId__'
