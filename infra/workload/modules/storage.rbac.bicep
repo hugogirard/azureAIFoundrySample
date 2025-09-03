@@ -22,6 +22,6 @@ resource acrPullFlightApiAssignment 'Microsoft.Authorization/roleAssignments@202
   properties: {
     principalId: principalId
     roleDefinitionId: storageTableDataContributorRole.id
-    principalType: 'ServicePrincipal'
+    principalType: servicePrincipalType
   }
 }
