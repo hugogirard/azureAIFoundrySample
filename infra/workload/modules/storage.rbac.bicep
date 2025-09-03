@@ -1,5 +1,10 @@
 param principalId string
 param storageResourceName string
+@allowed([
+  'ServicePrincipal'
+  'User'
+])
+param servicePrincipalType string
 
 resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' existing = {
   name: storageResourceName

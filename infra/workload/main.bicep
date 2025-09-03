@@ -104,6 +104,7 @@ module web_rbac_storage 'modules/storage.rbac.bicep' = {
   params: {
     principalId: web.outputs.fligtapiPrincipalId
     storageResourceName: storageAccount.outputs.name
+    servicePrincipalType: 'ServicePrincipal'
   }
 }
 
@@ -112,6 +113,7 @@ module user_rbac_storage 'modules/storage.rbac.bicep' = if (userObjectId != '' &
   params: {
     principalId: userObjectId
     storageResourceName: storageAccount.outputs.name
+    servicePrincipalType: 'User'
   }
 }
 
@@ -120,6 +122,7 @@ module sp_rbac_storage 'modules/storage.rbac.bicep' = {
   params: {
     principalId: servicePrincipalActionId
     storageResourceName: storageAccount.outputs.name
+    servicePrincipalType: 'ServicePrincipal'
   }
 }
 
