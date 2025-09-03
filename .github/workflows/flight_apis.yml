@@ -7,7 +7,7 @@ env:
   IMAGE_NAME: flight-api
 
 jobs:
-  build-deploy-image:
+  build-image:
     runs-on: ubuntu-latest
     
     steps:
@@ -28,3 +28,27 @@ jobs:
         az acr login --name ${{ secrets.ACR_LOGIN_SERVER }} 
         az acr build -t ${{ secrets.ACR_LOGIN_SERVER }}/flight-api:${{ github.run_id }} -r ${{ secrets.ACR_LOGIN_SERVER }} .
       working-directory: ./src/apis/flight-api
+
+    - name: Azure logout
+      run: |
+        az logout           
+
+  deploy-image:
+    runs-on: ubuntu-latest
+    
+    steps:
+
+    - name: Azure Login
+      uses: Azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}      
+
+    - uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'myapp'
+        images: ${{ secrets.ACR_LOGIN_SERVER }}/flight-api:${{ github.run_id }}
+
+    - name: Azure logout
+      run: |
+        az logout            
+   
