@@ -25,7 +25,7 @@ try:
             print(f"Deleting table {config.airport_table}...")
             table_service_client.delete_table(table_name=config.airport_table)
             table_service_client.delete_table(table_name=config.flight_table)
-            time.sleep(10)
+            time.sleep(120)
     except Exception as e:
         print(f"Delete table failed: {e}")    
 
