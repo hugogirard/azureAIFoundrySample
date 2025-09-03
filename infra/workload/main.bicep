@@ -51,6 +51,7 @@ module web 'modules/web.bicep' = {
   params: {
     location: location
     suffix: suffix
+    acrResourceName: registry.outputs.name
   }
 }
 
