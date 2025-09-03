@@ -204,11 +204,21 @@ flowchart TD
 2. **Trigger** the `foundry.yml` workflow in GitHub Actions.
 3. Wait for completion. The workflow will **save the Foundry resource name as a secret**.
 
+### 📤 **Secrets Created by this Workflow**
+
+After successful completion, the following secret will be automatically created in your repository:
+
+| Secret Name | Description | Source |
+|-------------|-------------|---------|
+| `FOUNDRY_RESOURCE_NAME` | Name of the AI Foundry account (Cognitive Services) | Bicep output |
+
+> 💡 **Note:** This secret is automatically created by the workflow and will be used by the subsequent project deployment step (project.yml).
+
 ---
 
 ## 4️⃣ Step 3: Deploy AI Foundry Project (`project.yml`)
 
-**Finally, run the `project.yml` GitHub Action.**
+**Finally, run the `Create AI Foundry Project` GitHub Action.**
 
 ### 📦 What does it create?
 
@@ -236,7 +246,7 @@ The [`infra/project/main.bicep`](infra/project/main.bicep) file provisions the *
 ### ⚙️ **How to run**
 
 1. Ensure all previous workflows completed and secrets are available.
-2. **Trigger** the `project.yml` workflow in GitHub Actions.
+2. **Trigger** the `Create AI Foundry Project` workflow in GitHub Actions.
 3. Provide the required project inputs (name, display name, description).
 
 ---
