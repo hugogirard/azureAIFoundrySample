@@ -66,6 +66,8 @@ frozenlist==1.7.0
     # via
     #   aiohttp
     #   aiosignal
+gunicorn==23.0.0
+    # via flight-api (pyproject.toml)
 h11==0.16.0
     # via
     #   httpcore
@@ -105,6 +107,8 @@ multidict==6.6.3
     # via
     #   aiohttp
     #   yarl
+packaging==25.0
+    # via gunicorn
 propcache==0.3.2
     # via
     #   aiohttp
