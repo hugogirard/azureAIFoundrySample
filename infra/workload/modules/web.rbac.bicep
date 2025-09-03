@@ -17,7 +17,7 @@ resource acrPullFlightApiAssignment 'Microsoft.Authorization/roleAssignments@202
   name: guid(flightApiPrincipalId, acrPullRole.id, acr.id)
   properties: {
     principalId: flightApiPrincipalId
-    roleDefinitionId: acr.id
+    roleDefinitionId: acrPullRole.id
     principalType: 'ServicePrincipal'
   }
 }
