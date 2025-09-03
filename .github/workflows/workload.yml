@@ -61,7 +61,7 @@ jobs:
           az role assignment create \
             --role "Storage Table Data Contributor" \
             --assignee ${{ secrets.SERVICE_PRINCIPAL_ACTION_ID }} \
-            --scope ${{ steps.createResources.outputs.storageAccountResourceId }}
+            --scope ${{ steps.createResources.outputs.storageResourceId }}
 
 
       - uses: gliech/create-github-secret-action@v1
