@@ -52,6 +52,8 @@ module web 'modules/web.bicep' = {
     location: location
     suffix: suffix
     acrResourceName: registry.outputs.name
+    cosmosResourceName: databaseAccount.outputs.name
+    storageResourceName: storageAccount.outputs.name
   }
 }
 
