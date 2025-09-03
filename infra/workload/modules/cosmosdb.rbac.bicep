@@ -1,4 +1,4 @@
-param userObjectId string
+param principalId string
 param cosmosDbResourceName string
 
 resource cosmosdb 'Microsoft.DocumentDB/databaseAccounts@2024-11-15' existing = {
@@ -12,10 +12,10 @@ resource cosmosDbDataContributorRole 'Microsoft.DocumentDB/databaseAccounts/sqlR
 }
 
 resource assignment 'Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments@2024-05-15' = {
-  name: guid(cosmosDbDataContributorRole.id, userObjectId, cosmosdb.id)
+  name: guid(cosmosDbDataContributorRole.id, principalId, cosmosdb.id)
   parent: cosmosdb
   properties: {
-    principalId: userObjectId
+    principalId: principalId
     roleDefinitionId: cosmosDbDataContributorRole.id
     scope: cosmosdb.id
   }

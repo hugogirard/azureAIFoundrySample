@@ -169,11 +169,19 @@ module databaseAccount 'br/public:avm/res/document-db/database-account:0.15.0' =
   }
 }
 
-module rbac_user 'modules/user.rbac.bicep' = if (userObjectId != '' && userObjectId != null) {
+module web_app_cosmosdb 'modules/cosmosdb.rbac.bicep' = {
   scope: rgResources
   params: {
     cosmosDbResourceName: databaseAccount.outputs.name
-    userObjectId: userObjectId
+    principalId: web.outputs.fligtapiPrincipalId
+  }
+}
+
+module rbac_user 'modules/cosmosdb.rbac.bicep' = if (userObjectId != '' && userObjectId != null) {
+  scope: rgResources
+  params: {
+    cosmosDbResourceName: databaseAccount.outputs.name
+    principalId: userObjectId
   }
 }
 
