@@ -317,6 +317,56 @@ After successful completion, the following secrets will be automatically created
 
 ---
 
+## 6️⃣ Step 5: Seed Database Tables (`seeding.yml`)
+
+**After deploying the workload infrastructure, run the `Seeding the airport and flight table` GitHub Action.**
+
+### 🌱 What does it seed?
+
+The [`seeding.yml`](.github/workflows/seeding.yml) workflow populates the Azure Table Storage with initial data required by the travel application:
+
+- **Airport Table** (`airporttable`): Contains airport information including:
+  - Airport codes (IATA codes like YYZ, YVR, CDG)
+  - Airport names and locations
+  - Organized by country partitions (Canada, USA, France, etc.)
+- **Flight Table** (`flighttable`): Contains flight information including:
+  - Flight numbers and airline information
+  - Route details (departure/arrival airports)
+  - Pricing and seat availability
+  - Flight duration and schedule information
+  - Direct flight indicators
+
+### 🗂️ **Sample Data Overview**
+
+The seeding process loads:
+- **~100+ airports** from major international destinations
+- **~850+ flights** with comprehensive route coverage between airports
+- **Realistic flight data** including prices, schedules, and seat availability
+
+### 🔧 **Environment Variables Used**
+
+- `AZURE_STORAGE_ENDPOINT`: Storage account endpoint (from workload deployment)
+- `AZURE_STORAGE_AIRPORT_TABLE`: Name of the airport table (`airporttable`)
+- `AZURE_STORAGE_FLIGHT_TABLE`: Name of the flight table (`flighttable`)
+- `DELETE_TABLE`: Optional flag to recreate tables (default: `false`)
+
+### ⚙️ **How to run**
+
+1. **Ensure the workload infrastructure is deployed** and the `STORAGE_TABLE_ENDPOINT` secret is available.
+2. **Trigger** the `Seeding the airport and flight table` workflow in GitHub Actions.
+3. The workflow will authenticate using Azure credentials and populate both tables with sample data.
+
+### ✅ **Verification**
+
+After successful completion:
+- Check the Azure portal to verify the tables contain data
+- The Flight API endpoints will be able to serve airport and flight information
+- The travel application will have realistic data for testing and demonstrations
+
+> 💡 **Note:** This step is essential for the travel application to function properly. Without seeded data, the flight search and booking functionality will not work as the API depends on this data to serve requests.
+
+---
+
 ## 🏗️ **Complete Architecture Overview**
 
 ### 🌐 **Virtual Network Topology**
@@ -393,6 +443,7 @@ flowchart LR
 | 2    | `foundry.yml`| AI Foundry account (private, VNet-injected)          | 2nd       |
 | 3    | `project.yml`| AI Foundry project, connections, RBAC, capability host| 3rd       |
 | 4    | `workload.yml`| Travel app workload (ACR, App Service, Storage, CosmosDB)| 4th       |
+| 5    | `seeding.yml`| Seed airport and flight data to Azure Table Storage  | 5th       |
 
 ---
 
