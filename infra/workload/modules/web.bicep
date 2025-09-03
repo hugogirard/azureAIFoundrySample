@@ -1,5 +1,6 @@
 param suffix string
 param location string
+param acrResourceName string
 
 resource asp 'Microsoft.Web/serverfarms@2024-11-01' = {
   name: 'asp-${suffix}'
@@ -22,7 +23,26 @@ resource flightapi 'Microsoft.Web/sites@2024-11-01' = {
     type: 'SystemAssigned'
   }
   properties: {
-    siteConfig: {}
+    siteConfig: {
+      appSettings: [
+        {
+          name: 'DOCKER_REGISTRY_SERVER_URL'
+          value: 'https://${acrResourceName}.azurecr.io'
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_USERNAME'
+          value: ''
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_PASSWORD'
+          value: ''
+        }
+      ]
+      linuxFxVersion: 'DOCKER|${acrResourceName}.azurecr.io/test:1'
+      alwaysOn: true
+      acrUseManagedIdentityCreds: true
+    }
+    serverFarmId: asp.id
   }
 }
 
