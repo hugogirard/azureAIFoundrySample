@@ -399,8 +399,31 @@ To remove all resources, delete the resource groups or use the corresponding des
 
 ---
 
-## 📚 **References**
+## � **Travel Application Components**
 
+This infrastructure deployment supports a complete travel booking application with the following components:
+
+### **Flight Booking API**
+A comprehensive RESTful API built with FastAPI that handles:
+- ✈️ Flight search and availability
+- 🛩️ Airport information management
+- 📋 Booking creation and management
+- 🔐 User authentication via Azure Easy Auth
+- 💾 Data persistence with Azure Table Storage and CosmosDB
+
+📖 **[Complete Flight API Documentation →](docs/FLIGHT-API.md)**
+
+### **MCP Server**
+Model Context Protocol server for AI agent integration with flight booking capabilities.
+
+### **Web Application**
+Frontend web application for user interaction with the booking system.
+
+---
+
+## �📚 **References**
+
+- [Flight API Documentation](docs/FLIGHT-API.md)
 - [infra/base/main.bicep](infra/base/main.bicep)
 - [infra/foundry/main.bicep](infra/foundry/main.bicep)
 - [infra/project/main.bicep](infra/project/main.bicep)
