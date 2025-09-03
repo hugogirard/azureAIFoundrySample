@@ -15,6 +15,7 @@ Before starting, you’ll need to create several **GitHub repository secrets**. 
 | `LOCATION`                              | Azure region for deployment                               | `eastus2`                            |
 | `RESOURCE_GROUP_NAME`                    | Resource group for core resources                         | `rg-ai-foundry-resources`            |
 | `VNET_RESOURCE_GROUP_NAME`               | Resource group for the VNet                               | `rg-vnet`                            |
+| `WORKLOAD_RESOURCE_GROUP_NAME`           | Resource group for workload resources                     | `rg-travel-workload`                        |
 | `SUBNET_AGENT_ADDRESS_PREFIX`            | Address prefix for agent subnet                           | `172.16.1.0/24`                      |
 | `JUMPBOX_SUBNET_ADDRESS_PREFIX`          | Address prefix for jumpbox subnet                         | `172.16.2.0/24`                      |
 | `SUBNET_PRIVATE_ENDPOINT_ADDRESS_PREFIX` | Address prefix for private endpoint subnet                | `172.16.3.0/24`                      |
@@ -28,13 +29,16 @@ Before starting, you’ll need to create several **GitHub repository secrets**. 
 | `PA_TOKEN`                               | GitHub Personal Access Token (for secret creation)        |                                      |
 | `AZURE_CREDENTIALS`                      | Azure Service Principal credentials (JSON)                | `{...}`                              |
 | `AZURE_SUBSCRIPTION`                     | Azure Subscription ID                                     | `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` |
+| `USER_OBJECT_ID`                         | Azure AD User Object ID (for RBAC assignments)           | `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` |
 
 > ⚠️ **Important - Subnet IP Address Limitation:** Azure AI Foundry Agent requires that all subnets use IP address ranges under **172.16.0.0/12** or **192.168.0.0/16**. The example values above use 172.16.0.0/16 to comply with this requirement.
 
 > 💡 **Tip:** To create the Azure Service Principal for `AZURE_CREDENTIALS`, run:
 > ```bash
-> az ad sp create-for-rbac --name foundry-iac --role contributor --scopes /subscriptions/<your-subscription-id>
+> az ad sp create-for-rbac --name foundry-iac --role owner --scopes /subscriptions/<your-subscription-id>
 > ```
+> 
+> ⚠️ **Note:** Owner permissions are required at the subscription level because the Azure AI Foundry Project deployment needs to assign RBAC roles to managed identities and service principals.
 
 ---
 
@@ -218,7 +222,7 @@ After successful completion, the following secret will be automatically created 
 
 ## 4️⃣ Step 3: Deploy AI Foundry Project (`project.yml`)
 
-**Finally, run the `Create AI Foundry Project` GitHub Action.**
+**Next, run the `Create AI Foundry Project` GitHub Action.**
 
 ### 📦 What does it create?
 
@@ -248,6 +252,56 @@ The [`infra/project/main.bicep`](infra/project/main.bicep) file provisions the *
 1. Ensure all previous workflows completed and secrets are available.
 2. **Trigger** the `Create AI Foundry Project` workflow in GitHub Actions.
 3. Provide the required project inputs (name, display name, description).
+
+---
+
+## 5️⃣ Step 4: Deploy Travel Workload Infrastructure (`workload.yml`)
+
+**Finally, run the `Create Travel Infra Workload` GitHub Action.**
+
+### 🛫 What does it create?
+
+The [`infra/workload/main.bicep`](infra/workload/main.bicep) file provisions the **travel application workload resources**:
+
+- **Azure Container Registry** (Premium SKU with private endpoint)
+- **App Service Plan and Web Apps** (for MCP Server, APIs, and Web App)
+- **Storage Account** with tables:
+  - `airporttable` - Airport data
+  - `flighttable` - Flight information
+- **CosmosDB Account** with SQL database:
+  - Database: `flight`
+  - Container: `bookings` (partitioned by `/username`)
+- **RBAC Role Assignments** for secure access
+- **Private endpoints and DNS integration** (when lockdown enabled)
+
+### 🗝️ **Secrets Used**
+
+- `LOCATION`
+- `WORKLOAD_RESOURCE_GROUP_NAME`
+- `PRIVATE_DNS_REGISTRY_RESOURCE_ID`
+- `SUBNET_PRIVATE_ENDPOINT_ID`
+- `SUBNET_ACA_RESOURCE_ID`
+- `TABLE_STORAGE_PRIVATE_DNS_ZONE_RESOURCE_ID`
+- `COSMOSDB_PRIVATE_DNS_ZONE_RESOURCE_ID`
+- `USER_OBJECT_ID` (optional - for RBAC assignments)
+
+### ⚙️ **How to run**
+
+1. Ensure all previous workflows completed and secrets are available.
+2. **Trigger** the `Create Travel Infra Workload` workflow in GitHub Actions.
+3. Choose whether to enable lockdown (private traffic only).
+
+### 📤 **Secrets Created by this Workflow**
+
+After successful completion, the following secrets will be automatically created in your repository:
+
+| Secret Name | Description | Source |
+|-------------|-------------|---------|
+| `STORAGE_TABLE_ENDPOINT` | Endpoint URL for Azure Storage Tables | Bicep output |
+| `COSMOS_DB_ENDPOINT` | Endpoint URL for CosmosDB account | Bicep output |
+| `ACR_LOGIN_SERVER` | Login server URL for Azure Container Registry | Bicep output |
+
+> 💡 **Note:** These secrets contain the endpoints needed by your travel application to connect to the storage and database services.
 
 ---
 
@@ -326,6 +380,7 @@ flowchart LR
 | 1    | `core.yml`   | Core network, DNS, storage, CosmosDB, search, jumpbox| 1st       |
 | 2    | `foundry.yml`| AI Foundry account (private, VNet-injected)          | 2nd       |
 | 3    | `project.yml`| AI Foundry project, connections, RBAC, capability host| 3rd       |
+| 4    | `workload.yml`| Travel app workload (ACR, App Service, Storage, CosmosDB)| 4th       |
 
 ---
 

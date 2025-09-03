@@ -1,4 +1,4 @@
-name: Create Infra Workload
+name: Create Travel Infra Workload
 
 on:
   workflow_dispatch:
