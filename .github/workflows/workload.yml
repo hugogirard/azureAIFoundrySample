@@ -55,19 +55,14 @@ jobs:
           template: ./infra/workload/main.bicep
           failOnStdErr: false
           parameters: ./infra/workload/main.bicepparam lockdown=${{inputs.lockdown}} userObjectId=${{ secrets.USER_OBJECT_ID }}
+      
+      - name: Assign RBAC Storage SP
+        run: |
+          az role assignment create \
+            --role "Storage Table Data Contributor" \
+            --assignee ${{ secrets.SERVICE_PRINCIPAL_ACTION_ID }} \
+            --scope ${{ steps.createResources.outputs.storageAccountResourceId }}
 
-      # - uses: gliech/create-github-secret-action@v1
-      #   with:
-      #     name: ACA_ENVIRONMENT_RESOURCE_NAME
-      #     value: ${{ steps.createResources.outputs.acaEnvironmentResourceName }}
-      #     pa_token: ${{ secrets.PA_TOKEN }}          
-
-
-      # - uses: gliech/create-github-secret-action@v1
-      #   with:
-      #     name: ACA_ENVIRONMENT_RESOURCE_ID
-      #     value: ${{ steps.createResources.outputs.acaResourceId }}
-      #     pa_token: ${{ secrets.PA_TOKEN }}          
 
       - uses: gliech/create-github-secret-action@v1
         with:

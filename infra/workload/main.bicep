@@ -5,7 +5,6 @@ param privateDnsRegistryResourceId string
 param privateDnsStorableTableResourceId string
 param privateDnsCosmosDBResourceId string
 param userObjectId string
-param servicePrincipalActionId string
 param workloadResourceGroupName string
 param location string
 param lockdown bool
@@ -114,15 +113,6 @@ module user_rbac_storage 'modules/storage.rbac.bicep' = if (userObjectId != '' &
     principalId: userObjectId
     storageResourceName: storageAccount.outputs.name
     servicePrincipalType: 'User'
-  }
-}
-
-module sp_rbac_storage 'modules/storage.rbac.bicep' = {
-  scope: rgResources
-  params: {
-    principalId: servicePrincipalActionId
-    storageResourceName: storageAccount.outputs.name
-    servicePrincipalType: 'ServicePrincipal'
   }
 }
 
