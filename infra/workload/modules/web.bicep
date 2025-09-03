@@ -77,3 +77,4 @@ resource flightapi 'Microsoft.Web/sites@2024-11-01' = {
 }
 
 output fligtapiPrincipalId string = flightapi.identity.principalId
+output flightApiWebAppName string = flightapi.name

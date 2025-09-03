@@ -213,3 +213,4 @@ output airportTableName string = storageTables.outputs.tableNames[0]
 output flightTableName string = storageTables.outputs.tableNames[1]
 output cosmosDbName string = databaseAccount.outputs.name
 output acrServerEndpoint string = registry.outputs.loginServer
+output flightApiWebAppName string = web.outputs.flightApiWebAppName

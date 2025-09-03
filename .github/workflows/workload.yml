@@ -82,3 +82,11 @@ jobs:
           name: ACR_LOGIN_SERVER
           value: ${{ steps.createResources.outputs.acrServerEndpoint }}
           pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: FLIGHT_API_WEB_APP_NAME
+          value: ${{ steps.createResources.outputs.flightApiWebAppName }}
+          pa_token: ${{ secrets.PA_TOKEN }}          
+
+          
