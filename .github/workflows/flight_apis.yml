@@ -76,5 +76,5 @@ jobs:
         deploymentName: ${{ github.run_id }}
         template: ./apis/flight-api.bicep
         failOnStdErr: false
-        parameters: apimResourceName=${{ secrets.APIM_RESOURCE_NAME }} apimResourceGroupName=${{ secrets.RESOURCE_GROUP_NAME }}  flightApiEndpoint=${{ secrets.FLIGHT_API_ENDPOINT }}
+        parameters: apimResourceName=${{ secrets.APIM_RESOURCE_NAME }} apimResourceGroupName='rg-ai-foundry-resources' flightApiEndpoint=${{ secrets.FLIGHT_API_ENDPOINT }}
     
