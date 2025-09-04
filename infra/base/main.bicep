@@ -473,3 +473,4 @@ output privateDnsRegistryResourceId string = privateDnsZone[6].outputs.resourceI
 output subnetAcaResourceId string = virtualNetwork.outputs.subnetResourceIds[4]
 output cosmosDBPrivateDnsZoneResourceId string = privateDnsZone[2].outputs.resourceId
 output tableStoragePrivateDnsZoneResourceId string = privateDnsZone[7].outputs.resourceId
+output apimResourceName string = apim.outputs.name

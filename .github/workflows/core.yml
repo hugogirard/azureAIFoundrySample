@@ -168,4 +168,11 @@ jobs:
           name: COSMOSDB_PRIVATE_DNS_ZONE_RESOURCE_ID
           value: ${{ steps.createResources.outputs.cosmosDBPrivateDnsZoneResourceId }}
           pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: APIM_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.apimResourceName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+          
           
