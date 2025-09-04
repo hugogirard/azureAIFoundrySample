@@ -214,3 +214,4 @@ output flightTableName string = storageTables.outputs.tableNames[1]
 output cosmosDbName string = databaseAccount.outputs.name
 output acrServerEndpoint string = registry.outputs.loginServer
 output flightApiWebAppName string = web.outputs.flightApiWebAppName
+output flightApiEndpoint string = 'https://${web.outputs.flightApiWebAppName}.azurewebsites.net'

@@ -89,4 +89,10 @@ jobs:
           value: ${{ steps.createResources.outputs.flightApiWebAppName }}
           pa_token: ${{ secrets.PA_TOKEN }}          
 
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: FLIGHT_API_ENDPOINT
+          value: ${{ steps.createResources.outputs.flightApiEndpoint }}
+          pa_token: ${{ secrets.PA_TOKEN }}             
+          
           
