@@ -53,3 +53,25 @@ jobs:
       run: |
         az logout            
    
+  configure-api-management:
+    runs-on: ubuntu-latest
+    needs: deploy-image
+
+    steps:
+
+    - name: Azure Login
+      uses: Azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: configureApiApim
+      id: apim
+      uses: azure/arm-deploy@v2
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        resourceGroupName: ${{ secrets.WORKLOAD_RESOURCE_GROUP_NAME }}
+        deploymentName: ${{ github.run_id }}
+        template: ./apis/flight-api.bicep
+        failOnStdErr: false
+        parameters: apimResourceName=${{ secrets.APIM_RESOURCE_NAME }} flightApiEndpoint=${{ secrets.FLIGHT_API_ENDPOINT }}
+    
